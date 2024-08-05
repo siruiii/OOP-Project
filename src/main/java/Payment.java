@@ -1,114 +1,71 @@
-import java.util.List;
-
-public class Payment {
-    private List<Item> orderSummary;
-    private PaymentMethod payMethod;
+public class Payment{
+    private String orderSummary;
+    private String payMethod;
     private String promoCode;
-    private double totalCost;
     private boolean payConfirm;
-    private String receipt;
 
-    public Payment(List<Item> orderSummary) {
-        this.orderSummary = orderSummary;
-        this.totalCost = calculateTotalCost();
+    // constructor
+    public Payment() {
+        this.orderSummary = "";
+        this.payMethod = "";
+        this.promoCode = "";
         this.payConfirm = false;
-        this.receipt = "";
     }
 
-    private double calculateTotalCost() {
-        double total = 0;
-        for (Item item : orderSummary) {
-            total += item.getPrice();
-        }
-        return total;
+    // Getters & Setters
+    public String getOrderSummary() {
+        return orderSummary;
     }
 
-    public void displayOrderSummary() {
-        System.out.println("Order Summary:");
-        for (Item item : orderSummary) {
-            System.out.println(item);
-        }
-        System.out.println("Total Cost: $" + totalCost);
+    public void setOrderSummary(String orderSummary) {
+        this.orderSummary = orderSummary;
     }
 
-    public void selectPaymentMethod(PaymentMethod paymentMethod) {
-        this.payMethod = paymentMethod;
+    public String getPayMethod() {
+        return payMethod;
     }
 
-    public void applyPromotionCode(String promotionCode) {
-        // all promo discounts are 10% off
-        if (promotionCode.equals("DISCOUNT10")) {
-            this.totalCost *= 0.9;
-            this.promoCode = promotionCode;
-            System.out.println("Promotion code applied. New total cost: $" + totalCost);
-        } else {
-            System.out.println("Invalid promotion code.");
-        }
+    public void setPaymentMethod(String paymentMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public String getPromoCode() {
+        return promoCode;
+    }
+
+    public void setPromoCode(String promoCode) {
+        this.promoCode = promoCode;
+    }
+
+    public boolean isPayConfirm() {
+        return payConfirm;
     }
 
     public void confirmPay() {
-        if (payMethod == null) {
-            System.out.println("Please select a payment method.");
-            return;
-        }
         this.payConfirm = true;
-        this.receipt = generateReceipt();
-        System.out.println("Payment confirmed. Receipt: \n" + receipt);
     }
 
-    private String generateReceipt() {
-        StringBuilder receiptBuilder = new StringBuilder();
-        receiptBuilder.append("Receipt:\n");
-        for (Item item : orderSummary) {
-            receiptBuilder.append(item).append("\n");
-        }
-        receiptBuilder.append("Total Cost: $").append(totalCost).append("\n");
-        receiptBuilder.append("Payment Method: ").append(paymentMethod).append("\n");
-        if (promoCode != null) {
-            receiptBuilder.append("Promotion Code: ").append(promotionCode).append("\n");
-        }
-        return receiptBuilder.toString();
+    // Method to display order summary
+    public void displayOrderSummary() {
+        System.out.println("Order Summary: " + this.orderSummary);
     }
 
-    public void printReceipt() {
-        if (!payConfirm) {
-            System.out.println("Payment not confirmed. Cannot print receipt.");
-            return;
-        }
-        System.out.println("Printing receipt...");
-        System.out.println(receipt);
+    // Method to select payment method
+    public void selectPaymentMethod(String paymentMethod) {
+        setPaymentMethod(paymentMethod);
+        System.out.println("Payment Method Selected: " + this.payMethod);
     }
 
-    public void emailReceipt(String email) {
-        if (!payConfirm) {
-            System.out.println("Payment not confirmed. Cannot email receipt.");
-            return;
-        }
-        System.out.println("Emailing receipt to " + email + "...");
+    // Method to apply promo code
+    public void applyPromoCode(String promoCode) {
+        setPromoCode(promoCode);
+        System.out.println("Promo Code Applied: " + this.promoCode);
     }
 
-    // Nested classes for demonstration purposes
-    public static class Item {
-        private String name;
-        private double price;
-
-        public Item(String name, double price) {
-            this.name = name;
-            this.price = price;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        @Override
-        public String toString() {
-            return name + " - $" + price;
-        }
+    // Method to confirm payment
+    public void confirmPaymentProcess() {
+        confirmPay();
+        System.out.println("Payment Confirmed: " + this.payConfirm);
     }
-
-    public enum PaymentMethod {
-        CREDIT_CARD, DEBIT_CARD, MOBILE_PAYMENT, GIFT_CARD, CASH
-    }
-
 }
+
