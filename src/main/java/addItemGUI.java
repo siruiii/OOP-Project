@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
-
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,28 +13,30 @@ import javax.swing.JTextField;
 public class addItemGUI extends JFrame {
 
   private JPanel contentPane;
-  private JTextField textField;
+    private JTextField textField;
+    private String itemName;
 
   /**
    * Launch the application.
    */
-  public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          addItemGUI frame = new addItemGUI();
-          frame.setVisible(true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
-
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    addItemGUI frame = new addItemGUI(null);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
   /**
    * Create the frame.
    */
-  public addItemGUI() {
+    public addItemGUI(menuGUI menuFrame) {
+      this.itemName = itemName;
+
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 450, 300);
     contentPane = new JPanel();
@@ -43,17 +46,25 @@ public class addItemGUI extends JFrame {
     contentPane.setLayout(null);
 
     JLabel lblNewLabel = new JLabel("Item: ");
-    lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 21));
-    lblNewLabel.setBounds(74, 47, 61, 16);
-    contentPane.add(lblNewLabel);
+        lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+        lblNewLabel.setBounds(74, 47, 300, 16); 
+        contentPane.add(lblNewLabel);
 
     JButton btnNewButton = new JButton("Back");
     btnNewButton.setBounds(6, 6, 87, 29);
     contentPane.add(btnNewButton);
 
+    btnNewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                menuFrame.showMenu();
+            }
+        });
+
     JLabel lblSize = new JLabel("Size:");
-    lblSize.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-    lblSize.setBounds(84, 83, 61, 16);
+    lblSize.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+    lblSize.setBounds(84, 87, 61, 16);
     contentPane.add(lblSize);
 
     JCheckBox chckbxNewCheckBox = new JCheckBox("Small");
@@ -73,8 +84,8 @@ public class addItemGUI extends JFrame {
     contentPane.add(chckbxNewCheckBox_2);
 
     JLabel lblQuantity = new JLabel("Quantity:");
-    lblQuantity.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-    lblQuantity.setBounds(84, 120, 87, 16);
+    lblQuantity.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+    lblQuantity.setBounds(81, 125, 87, 16);
     contentPane.add(lblQuantity);
 
     textField = new JTextField();
@@ -82,4 +93,9 @@ public class addItemGUI extends JFrame {
     contentPane.add(textField);
     textField.setColumns(10);
   }
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+        JLabel lblNewLabel = (JLabel) contentPane.getComponent(0);
+        lblNewLabel.setText("Item: " + itemName);
+    }
 }

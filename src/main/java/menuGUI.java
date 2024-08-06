@@ -1,16 +1,19 @@
 import java.awt.EventQueue;
 import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class menuGUI extends JFrame {
 
   private JPanel contentPane;
+  private addItemGUI addItemFrame;
 
   /**
    * Launch the application.
@@ -49,6 +52,7 @@ public class menuGUI extends JFrame {
     contentPane.add(btnNewButton_1);
 
     JTextPane textPane = new JTextPane();
+    textPane.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setBounds(83, 47, 294, 179);
@@ -59,9 +63,42 @@ public class menuGUI extends JFrame {
 
       StringBuilder displayText = new StringBuilder();
       for (MenuItem item : items) {
-          displayText.append(item.getName()).append(" - $").append(item.getSmallPrice()).append("\n");
+          displayText.append(item.getName()).append(" - $").append(item.getSmallPrice()).append("  ★").append("\n");
       }
-
       textPane.setText(displayText.toString());
+      addItemFrame = new addItemGUI(this);
+
+      textPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    try {
+                        int offset = textPane.viewToModel2D(e.getPoint());
+                        int rowStart = textPane.getDocument().getDefaultRootElement().getElementIndex(offset);
+                        String selectedItem = textPane.getDocument().getText(
+                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),
+                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getEndOffset() -
+                                    textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset()
+                        ).trim();
+
+                        for (MenuItem item : items) {
+                            if (selectedItem.startsWith(item.getName())) {
+                                addItemFrame.setItemName(item.getName());
+                                setVisible(false);
+                                addItemFrame.setVisible(true); 
+                                break;
+                            }
+                        }
+
+                    } catch (BadLocationException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void showMenu() {
+        setVisible(true);
   }
 }
