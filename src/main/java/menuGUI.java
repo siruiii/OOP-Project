@@ -100,5 +100,5 @@ public class menuGUI extends JFrame {
 
     public void showMenu() {
         setVisible(true);
-  }
+    }
 }
