@@ -58,7 +58,7 @@ public class menuGUI extends JFrame {
         scrollPane.setBounds(83, 47, 294, 179);
         contentPane.add(scrollPane);
 
-    FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP project/src/itemfile.txt");
+    FileManager fileManager = new FileManager("https://replit.com/@kl3267/In-Store-Food-Ordering-System#src/main/java/itemfile.txt");
       List<MenuItem> items = fileManager.getItems();
 
       StringBuilder displayText = new StringBuilder();
