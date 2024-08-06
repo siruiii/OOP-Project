@@ -1,11 +1,12 @@
 import java.awt.EventQueue;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class menuGUI extends JFrame {
 
@@ -48,11 +49,19 @@ public class menuGUI extends JFrame {
     contentPane.add(btnNewButton_1);
 
     JTextPane textPane = new JTextPane();
-    textPane.setBounds(83, 47, 294, 179);
-    contentPane.add(textPane);
 
-    JScrollBar scrollBar = new JScrollBar();
-    scrollBar.setBounds(377, 47, 14, 179);
-    contentPane.add(scrollBar);
+        JScrollPane scrollPane = new JScrollPane(textPane);
+        scrollPane.setBounds(83, 47, 294, 179);
+        contentPane.add(scrollPane);
+
+    FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP project/src/itemfile.txt");
+      List<MenuItem> items = fileManager.getItems();
+
+      StringBuilder displayText = new StringBuilder();
+      for (MenuItem item : items) {
+          displayText.append(item.getName()).append(" - $").append(item.getSmallPrice()).append("\n");
+      }
+
+      textPane.setText(displayText.toString());
   }
 }
