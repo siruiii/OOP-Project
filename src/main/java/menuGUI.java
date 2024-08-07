@@ -1,74 +1,82 @@
 import java.awt.EventQueue;
-import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class menuGUI extends JFrame {
 
-  private JPanel contentPane;
-  private addItemGUI addItemFrame;
+    private JPanel contentPane;
+    private addItemGUI addItemFrame;
 
-  /**
-   * Launch the application.
-   */
-  public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        try {
-          menuGUI frame = new menuGUI();
-          frame.setVisible(true);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    menuGUI frame = new menuGUI();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-  /**
-   * Create the frame.
-   */
-  public menuGUI() {
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setBounds(100, 100, 450, 300);
-    contentPane = new JPanel();
-    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    /**
+     * Create the frame.
+     */
+    public menuGUI() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 450, 300);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-    setContentPane(contentPane);
-    contentPane.setLayout(null);
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
 
-    JButton btnNewButton = new JButton("Search");
-    btnNewButton.setBounds(16, 6, 117, 29);
-    contentPane.add(btnNewButton);
+        JButton btnNewButton = new JButton("Search");
+        btnNewButton.setBounds(16, 6, 117, 29);
+        contentPane.add(btnNewButton);
 
-    JButton btnNewButton_1 = new JButton("Cart");
-    btnNewButton_1.setBounds(16, 237, 117, 29);
-    contentPane.add(btnNewButton_1);
+        JButton btnNewButton_1 = new JButton("Cart");
+        btnNewButton_1.setBounds(16, 237, 117, 29);
+        contentPane.add(btnNewButton_1);
 
-    JTextPane textPane = new JTextPane();
-    textPane.setEditable(false);
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
 
         JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setBounds(83, 47, 294, 179);
         contentPane.add(scrollPane);
 
-    FileManager fileManager = new FileManager("https://replit.com/@kl3267/In-Store-Food-Ordering-System#src/main/java/itemfile.txt");
-      List<Item> items = fileManager.getItems();
+        // Load items from file
+        FileManager fileManager = new FileManager(
+                "https://replit.com/@kl3267/In-Store-Food-Ordering-System#src/main/java/itemfile.txt");
+        List<Item> items = fileManager.getItems();
 
-      StringBuilder displayText = new StringBuilder();
-      for (Item item : items) {
-          displayText.append(item.getName()).append(" - ").append("  ★").append("\n");
-      }
-      textPane.setText(displayText.toString());
-      addItemFrame = new addItemGUI(this);
+        // Display items with categories and ratings
+        StringBuilder displayText = new StringBuilder();
+        for (Item item : items) {
+            displayText.append(item.getName())
+                    .append(" - Rating: ")
+                    .append(item.getRatingStatus())
+                    .append(" ★")
+                    .append("\n");
+        }
+        textPane.setText(displayText.toString());
 
-      textPane.addMouseListener(new MouseAdapter() {
+        // Add mouse listener to open addItemGUI on item double-click
+        addItemFrame = new addItemGUI(this);
+
+        textPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -76,21 +84,23 @@ public class menuGUI extends JFrame {
                         int offset = textPane.viewToModel2D(e.getPoint());
                         int rowStart = textPane.getDocument().getDefaultRootElement().getElementIndex(offset);
                         String selectedItem = textPane.getDocument().getText(
-                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),
-                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getEndOffset() -
-                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset()
-                        ).trim();
+                                textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),
+                                textPane.getDocument().getDefaultRootElement().getElement(rowStart).getEndOffset() -
+                                        textPane.getDocument().getDefaultRootElement().getElement(rowStart)
+                                                .getStartOffset())
+                                .trim();
 
                         for (Item item : items) {
                             if (selectedItem.startsWith(item.getName())) {
-                                addItemFrame.setItemDetails(item.getName(), item.getSmallPrice(), item.getMediumPrice(), item.getLargePrice());
+                                addItemFrame.setItemDetails(item.getName(), item.getSmallPrice(), item.getMediumPrice(),
+                                        item.getLargePrice());
                                 setVisible(false);
-                                addItemFrame.setVisible(true); 
+                                addItemFrame.setVisible(true);
                                 break;
                             }
                         }
 
-                    } catch (BadLocationException ex) {
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }

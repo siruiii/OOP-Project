@@ -1,5 +1,6 @@
 public class Item {
     private String name;
+    private String category;
     private String size;
     private double smallPrice;
     private double mediumPrice;
@@ -8,11 +9,11 @@ public class Item {
     private int rateCount;
     private int quantity;
 
-    // select size
-    // Constructor
-    public Item(String name, double smallPrice, double mediumPrice, double largePrice, double totalRate,
-            int rateCount) {
+    // Default Constructor
+    public Item(String name, String category, double smallPrice, double mediumPrice, double largePrice,
+            double totalRate, int rateCount) {
         this.name = name;
+        this.category = category;
         this.smallPrice = smallPrice;
         this.mediumPrice = mediumPrice;
         this.largePrice = largePrice;
@@ -20,10 +21,11 @@ public class Item {
         this.rateCount = rateCount;
     }
 
-    public Item(String name, String size, double Price, double smallPrice, double mediumPrice, double largePrice,
-            int quantity) {
+    public Item(String name, String category, String size, double Price, double smallPrice, double mediumPrice,
+            double largePrice, int quantity) {
         this.name = name;
         this.size = "";
+        this.category = category;
         this.quantity = quantity;
         this.smallPrice = smallPrice;
         this.mediumPrice = mediumPrice;
@@ -37,6 +39,14 @@ public class Item {
 
     public String getName() {
         return name;
+    }
+
+    public String getcategory() {
+        return category;
+    }
+
+    public double getquantity() {
+        return quantity;
     }
 
     public double getSmallPrice() {

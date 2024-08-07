@@ -18,7 +18,7 @@ public class WaitingGUI extends JFrame {
     public WaitingGUI(int quantity) {
         // Setting up the frame
         setTitle("Order Status");
-        setSize(300, 150);
+        setBounds(100, 100, 450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(3, 1));
 

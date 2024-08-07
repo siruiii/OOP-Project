@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class CartManager {
-    public static ArrayList<Item> cart_items = new ArrayList<Item>();
+    public static List<Item> cart_items = new ArrayList<Item>();
 
-    public static ArrayList<Item> readCart() {
+    public static List<Item> readCart() {
         return cart_items;
     }
 

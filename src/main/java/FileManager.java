@@ -19,12 +19,15 @@ public class FileManager {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",");
-                if (parts.length == 4) {
+                if (parts.length == 7) {
                     String name = parts[0];
-                    double smallPrice = Double.parseDouble(parts[1]);
-                    double mediumPrice = Double.parseDouble(parts[2]);
-                    double largePrice = Double.parseDouble(parts[3]);
-                    items.add(new Item(name, smallPrice, mediumPrice, largePrice));
+                    String category = parts[1];
+                    double smallPrice = Double.parseDouble(parts[2]);
+                    double mediumPrice = Double.parseDouble(parts[3]);
+                    double largePrice = Double.parseDouble(parts[4]);
+                    double totalRate = Double.parseDouble(parts[5]);
+                    int rateCount = Integer.parseInt(parts[6]);
+                    items.add(new Item(name, category, smallPrice, mediumPrice, largePrice, totalRate, rateCount));
                 }
             }
         } catch (FileNotFoundException e) {
