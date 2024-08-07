@@ -78,7 +78,7 @@ public class menuGUI extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     try {
-                        int offset = textPane.viewToModel2D(e.getPoint());
+                        int offset = textPane.viewToModel(e.getPoint());
                         int rowStart = textPane.getDocument().getDefaultRootElement().getElementIndex(offset);
                         String selectedItem = textPane.getDocument().getText(
                                 textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),

@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,7 +29,16 @@ public class WaitingGUI extends JFrame {
         status.setBounds(50, 20, 200, 30);
         add(status);
 
-        load = new JLabel(new ImageIcon("loading.gif"), SwingConstants.CENTER);
+        // Load and resize the GIF using ImageIcon
+        try {
+            ImageIcon originalIcon = new ImageIcon("/Users/icyfloaty/Documents/CS_coding/OOP/Project/loading.gif");
+            Image originalImage = originalIcon.getImage();
+            Image scaledImage = originalImage.getScaledInstance(96, 96, Image.SCALE_DEFAULT);
+            load = new JLabel(new ImageIcon(scaledImage), SwingConstants.CENTER);
+        } catch (Exception e) {
+            load = new JLabel("Loading...", SwingConstants.CENTER);
+            e.printStackTrace();
+        }
         add(load);
 
         time = new JLabel("Estimated Time: " + remainTime + " seconds", SwingConstants.CENTER);
@@ -43,15 +54,14 @@ public class WaitingGUI extends JFrame {
         if (timer != null) {
             timer.cancel(); // Cancel any existing timer
         }
-        remainTime = 30 * quantity; // Calculate remaining time based on quantity
+        remainTime = 20 * quantity; // Calculate remaining time based on quantity
         total = remainTime;
         currStatInd = 0; // Reset the status to the first one
 
         timer = new Timer(); // Create a new timer
 
         // Schedule the timer task
-        timer.scheduleAtFixedRate(createTTask(quantity), 0, 1000); // Start immediately, run every 1000 milliseconds (1
-                                                                   // second)
+        timer.scheduleAtFixedRate(createTTask(quantity), 0, 1000); // Start immediately, run every 1000 milliseconds (1 second)
     }
 
     //create a new time task with override method
@@ -85,11 +95,10 @@ public class WaitingGUI extends JFrame {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    // Create and show the rating page
                     RatingGUI rating = new RatingGUI();
-                    rating.setVisible(true);
-                    // Close the waiting window
+                    // Close the waiting window before opening the rating page
                     dispose();
+                    rating.showWait();
                 }
             });
         }
@@ -104,5 +113,13 @@ public class WaitingGUI extends JFrame {
     public void showWait() {
         setVisible(true);
     }
+    
+    /* Debugger
+    public static void main(String[] args) {
+        // Create an instance of the WaitingGUI with a sample quantity
+        WaitingGUI gui = new WaitingGUI(1);
+        gui.showWait();
+    }
+    */
 
 }
