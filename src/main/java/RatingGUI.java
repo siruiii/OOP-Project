@@ -1,15 +1,14 @@
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class RatingGUI extends JFrame {
-  private ArrayList<Item> products;
+  private List<Item> products;
   private JTextArea feedbackArea;
 
-  public RatingGUI(ArrayList<Item> products) {
-
+  public RatingGUI(List<Item> products) {
     setTitle("Rating Page"); // Set the title of the window
     setSize(300, 200); // Set the size of the window
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Define the close operation
@@ -20,7 +19,7 @@ public class RatingGUI extends JFrame {
     add(feedbackArea, BorderLayout.NORTH);
 
     JButton submitButton = new JButton("Submit"); // Create the submit button
-    add(submitButton, BorderLayout.SOUTH); // Add the button to the bottom of the frame
+    add(submitButton, BorderLayout.SOUTH); // Add the button to the bottom
 
     submitButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {

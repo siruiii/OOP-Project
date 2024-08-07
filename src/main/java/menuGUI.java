@@ -58,8 +58,7 @@ public class menuGUI extends JFrame {
         contentPane.add(scrollPane);
 
         // Load items from file
-        FileManager fileManager = new FileManager(
-                "https://replit.com/@kl3267/In-Store-Food-Ordering-System#src/main/java/itemfile.txt");
+        FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP project/src/itemfile.txt");
         List<Item> items = fileManager.getItems();
 
         // Display items with categories and ratings
@@ -73,9 +72,7 @@ public class menuGUI extends JFrame {
         }
         textPane.setText(displayText.toString());
 
-        // Add mouse listener to open addItemGUI on item double-click
         addItemFrame = new addItemGUI(this);
-
         textPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -92,8 +89,8 @@ public class menuGUI extends JFrame {
 
                         for (Item item : items) {
                             if (selectedItem.startsWith(item.getName())) {
-                                addItemFrame.setItemDetails(item.getName(), item.getSmallPrice(), item.getMediumPrice(),
-                                        item.getLargePrice());
+                                addItemFrame.setItemDetails(item.getName(), item.getcategory(), item.getSmallPrice(),
+                                        item.getMediumPrice(), item.getLargePrice());
                                 setVisible(false);
                                 addItemFrame.setVisible(true);
                                 break;

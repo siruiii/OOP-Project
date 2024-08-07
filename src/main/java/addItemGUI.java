@@ -9,12 +9,14 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 
 public class addItemGUI extends JFrame {
 
     private JPanel contentPane;
     private JTextField textField;
     private String itemName;
+    private String category;
     private menuGUI menuFrame;
     private JCheckBox chckbxSmall, chckbxMedium, chckbxLarge;
     private double smallPrice, mediumPrice, largePrice;
@@ -123,10 +125,58 @@ public class addItemGUI extends JFrame {
         textField.setBounds(194, 157, 130, 26);
         contentPane.add(textField);
         textField.setColumns(10);
+
+        btnNewButton_1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedSize = null;
+                double price = 0.0; // Price based on the selected size
+
+                // Determine the selected size and its price
+                if (chckbxSmall.isSelected()) {
+                    selectedSize = "Small";
+                    price = smallPrice;
+                } else if (chckbxMedium.isSelected()) {
+                    selectedSize = "Medium";
+                    price = mediumPrice;
+                } else if (chckbxLarge.isSelected()) {
+                    selectedSize = "Large";
+                    price = largePrice;
+                }
+
+                // Parse the quantity
+                int quantity = 0;
+                try {
+                    quantity = Integer.parseInt(textField.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid quantity.", "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Validate selection and quantity
+                if (selectedSize != null && quantity > 0) {
+
+                    Item newItem = new Item(itemName, category, selectedSize, price, smallPrice, mediumPrice,
+                            largePrice, quantity);
+                    CartManager.addItem(newItem);
+                    JOptionPane.showMessageDialog(null,
+                            "Added to cart: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    setVisible(false);
+                    menuFrame.showMenu();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select a size and enter a valid quantity.",
+                            "Incomplete Selection", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
     }
 
-    public void setItemDetails(String itemName, double smallPrice, double mediumPrice, double largePrice) {
+    public void setItemDetails(String itemName, String category, double smallPrice, double mediumPrice,
+            double largePrice) {
         this.itemName = itemName;
+        this.category = category;
         this.smallPrice = smallPrice;
         this.mediumPrice = mediumPrice;
         this.largePrice = largePrice;
