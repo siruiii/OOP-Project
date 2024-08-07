@@ -99,7 +99,7 @@ public class ShoppingCartGUI {
         JButton btnEdit = new JButton("Edit");
         btnEdit.setBounds(33, 218, 118, 29);
         frame.getContentPane().add(btnEdit);
-        // btnEdit.addActionListener(e -> {
+        // btnEdit.addActionListener(ActionEvent e -> {
         //     EditItemGUI egui = new EditItemGUI();  // Create and show the edit window
         //     egui.setVisible(true);
         // });
