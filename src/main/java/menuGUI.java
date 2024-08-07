@@ -107,9 +107,10 @@ public class menuGUI extends JFrame {
 
                         for (Item item : items) {
                             if (selectedItem.startsWith(item.getName())) {
-                                addItemFrame.setItemDetails(item.getName(), item.getcategory(), item.getSmallPrice(),
+                                addItemFrame.setItemDetails(item.getName(), item.getCategory(), item.getSmallPrice(),
                                         item.getMediumPrice(), item.getLargePrice());
                                 setVisible(false);
+                                addItemFrame.setBtnBack("Back to Menu");
                                 addItemFrame.setVisible(true);
                                 break;
                             }

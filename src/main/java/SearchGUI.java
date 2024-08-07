@@ -154,8 +154,10 @@ public class SearchGUI extends JFrame {
 
                         for (Item item : items) {
                             if (selectedItem.startsWith(item.getName())) {
-                                addCurrentLine.setItemDetails(item.getName(), item.getcategory(), item.getSmallPrice(),
+                                addCurrentLine.setItemDetails(item.getName(), item.getCategory(), item.getSmallPrice(),
                                         item.getMediumPrice(), item.getLargePrice());
+                                setVisible(false);
+                                addCurrentLine.setBtnBack("Back to Search");
                                 addCurrentLine.setVisible(true);
                                 break;
                             }

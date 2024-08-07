@@ -24,7 +24,7 @@ public class Item {
     public Item(String name, String category, String size, double Price, double smallPrice, double mediumPrice,
             double largePrice, int quantity) {
         this.name = name;
-        this.size = "";
+        this.size = size;
         this.category = category;
         this.quantity = quantity;
         this.smallPrice = smallPrice;
@@ -33,7 +33,7 @@ public class Item {
     }
 
     // Getters
-    public String getsize() {
+    public String getSize() {
         return size;
     }
 
@@ -41,11 +41,11 @@ public class Item {
         return name;
     }
 
-    public String getcategory() {
+    public String getCategory() {
         return category;
     }
 
-    public double getquantity() {
+    public int getQuantity() {
         return quantity;
     }
 

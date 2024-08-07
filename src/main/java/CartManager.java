@@ -9,6 +9,10 @@ public class CartManager {
         return cart_items;
     }
 
+    public static int count() {
+        return cart_items.size();
+    } 
+
     public static void addItem(Item item) {
         cart_items.add(item);
     }

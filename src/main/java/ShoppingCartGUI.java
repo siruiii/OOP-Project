@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 public class ShoppingCartGUI extends JFrame {
+    private JTextPane textPane;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -52,8 +53,10 @@ public class ShoppingCartGUI extends JFrame {
         scrollPane.setBounds(29, 40, 388, 170);
         getContentPane().add(scrollPane);
 
-        JTextPane textPane = new JTextPane();
+        textPane = new JTextPane();
         scrollPane.setViewportView(textPane);
+        displayCart();
+
 
         JLabel lblNewLabel = new JLabel("Total Price: ");
         lblNewLabel.setBounds(123, 242, 129, 16);
@@ -72,5 +75,17 @@ public class ShoppingCartGUI extends JFrame {
         Font currentFont = lblNewLabel_1.getFont();
         lblNewLabel_1.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
         getContentPane().add(lblNewLabel_1);
+    }
+    private void displayCart(){
+        StringBuilder displayText = new StringBuilder();
+            for (Item item : CartManager.readCart()) {
+                displayText.append(item.getName())
+                        .append(" - Size: ")
+                        .append(item.getSize())
+                        .append(" - Quantity: ")
+                        .append(item.getQuantity())
+                        .append("\n");
+            }
+            textPane.setText(displayText.toString());
     }
 }
