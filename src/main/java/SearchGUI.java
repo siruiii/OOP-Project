@@ -1,26 +1,11 @@
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.Element;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.text.*;
 
-public class SearchGUI {
+public class SearchGUI extends JFrame {
 
-    private JFrame frame;
     private JTextField textField;
     private JTextPane textPane;
     private int hoverLine = -1;
@@ -31,7 +16,7 @@ public class SearchGUI {
         EventQueue.invokeLater(() -> {
             try {
                 SearchGUI window = new SearchGUI();
-                window.frame.setVisible(true);
+                window.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,18 +24,19 @@ public class SearchGUI {
     }
 
     public SearchGUI() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 450, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+        // Initialize JFrame properties
+        setTitle("Search GUI");
+        setBounds(100, 100, 450, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
 
         JLabel btnSearch = new JLabel("Search");
         btnSearch.setBounds(29, 65, 61, 16);
-        frame.getContentPane().add(btnSearch);
+        getContentPane().add(btnSearch);
 
         textField = new JTextField();
         textField.setBounds(92, 60, 215, 26);
-        frame.getContentPane().add(textField);
+        getContentPane().add(textField);
         textField.setColumns(10);
 
         JComboBox<String> cbxCategory = new JComboBox<>();
@@ -58,7 +44,7 @@ public class SearchGUI {
         cbxCategory.addItem("Food & Drink");
         cbxCategory.addItem("Food ONLY");
         cbxCategory.addItem("Drink ONLY");
-        frame.getContentPane().add(cbxCategory);
+        getContentPane().add(cbxCategory);
 
         JComboBox<String> cbxRating = new JComboBox<>();
         cbxRating.setBounds(287, 30, 130, 27);
@@ -67,25 +53,25 @@ public class SearchGUI {
         cbxRating.addItem("Rating >3★ ");
         cbxRating.addItem("Rating >2★ ");
         cbxRating.addItem("Rating >1★ ");
-        frame.getContentPane().add(cbxRating);
+        getContentPane().add(cbxRating);
 
         JButton btnEnter = new JButton("Enter");
         btnEnter.setBounds(319, 60, 98, 29);
-        frame.getContentPane().add(btnEnter);
+        getContentPane().add(btnEnter);
 
         JCheckBox chckbxFilter = new JCheckBox("Apply Filter");
         chckbxFilter.setBounds(29, 30, 109, 23);
-        frame.getContentPane().add(chckbxFilter);
+        getContentPane().add(chckbxFilter);
 
         JButton btnBack = new JButton("Back to Menu");
         btnBack.setBounds(6, 2, 117, 29);
-        frame.getContentPane().add(btnBack);
+        getContentPane().add(btnBack);
 
         JLabel lblinstruction = new JLabel(" ");
         lblinstruction.setBounds(29, 245, 250, 16);
         Font currentFont = lblinstruction.getFont();
         lblinstruction.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
-        frame.getContentPane().add(lblinstruction);
+        getContentPane().add(lblinstruction);
 
         textPane = new JTextPane();
         textPane.setEditable(false);
@@ -103,7 +89,7 @@ public class SearchGUI {
 
         JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setBounds(29, 95, 388, 150);
-        frame.getContentPane().add(scrollPane);
+        getContentPane().add(scrollPane);
 
         FileManager fileManager = new FileManager("itemfile.txt");
         List<Item> items = fileManager.getItems();
@@ -139,18 +125,12 @@ public class SearchGUI {
                         ex.printStackTrace();
                     }
                 }
-
-
             }
         });
 
         textPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // int pos = textPane.viewToModel2D(e.getPoint());
-                // int line = getLineAtPosition(pos);
-                // clickedLine = line;
-                // updateTextPaneStyles();
                 addItemGUI addCurrentLine = new addItemGUI(null);
                 if (e.getClickCount() == 2) {
                     try {
@@ -167,7 +147,6 @@ public class SearchGUI {
                             if (selectedItem.startsWith(item.getName())) {
                                 addCurrentLine.setItemDetails(item.getName(), item.getcategory(), item.getSmallPrice(),
                                         item.getMediumPrice(), item.getLargePrice());
-                                // setVisible(false);
                                 addCurrentLine.setVisible(true);
                                 break;
                             }
@@ -179,7 +158,6 @@ public class SearchGUI {
                 }
             }
         });
-
     }
 
     private void displayItems(List<Item> items) {

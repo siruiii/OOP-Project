@@ -1,13 +1,17 @@
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-import javax.swing.JTextPane;
-import javax.swing.JScrollPane;
+
+// import javafx.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
 import java.util.List;
+
+
 
 public class menuGUI extends JFrame {
 
@@ -42,9 +46,16 @@ public class menuGUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JButton btnNewButton = new JButton("Search");
-        btnNewButton.setBounds(16, 6, 117, 29);
-        contentPane.add(btnNewButton);
+        JButton btnSearch = new JButton("Search");
+        btnSearch.setBounds(16, 6, 117, 29);
+        contentPane.add(btnSearch);
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SearchGUI sgui = new SearchGUI();
+                setVisible(false);
+                sgui.setVisible(true);
+            }
+        });
 
         JButton btnNewButton_1 = new JButton("Cart");
         btnNewButton_1.setBounds(16, 237, 117, 29);
@@ -58,7 +69,7 @@ public class menuGUI extends JFrame {
         contentPane.add(scrollPane);
 
         // Load items from file
-        FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP project/src/itemfile.txt");
+        FileManager fileManager = new FileManager("itemfile.txt");
         List<Item> items = fileManager.getItems();
 
         // Display items with categories and ratings
