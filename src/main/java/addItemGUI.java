@@ -17,6 +17,7 @@ public class addItemGUI extends JFrame {
     private String itemName;
     private menuGUI menuFrame;
     private JCheckBox chckbxSmall, chckbxMedium, chckbxLarge;
+    private double smallPrice, mediumPrice, largePrice;
 
     /**
      * Launch the application.
@@ -33,11 +34,12 @@ public class addItemGUI extends JFrame {
             }
         });
     }
+
     /**
      * Create the frame.
      */
     public addItemGUI(menuGUI menuFrame) {
-        this.itemName = itemName;
+        this.menuFrame = menuFrame;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
@@ -49,7 +51,7 @@ public class addItemGUI extends JFrame {
 
         JLabel lblNewLabel = new JLabel("Item: ");
         lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-        lblNewLabel.setBounds(74, 47, 300, 16); 
+        lblNewLabel.setBounds(74, 47, 300, 16);
         contentPane.add(lblNewLabel);
 
         JButton btnNewButton = new JButton("Back");
@@ -69,8 +71,8 @@ public class addItemGUI extends JFrame {
         lblSize.setBounds(84, 87, 61, 16);
         contentPane.add(lblSize);
 
-        chckbxSmall = new JCheckBox("Small");
-        chckbxSmall.setBounds(134, 83, 73, 23);
+        chckbxSmall = new JCheckBox("Small: $0.00");
+        chckbxSmall.setBounds(134, 83, 150, 23);
         contentPane.add(chckbxSmall);
         chckbxSmall.addActionListener(new ActionListener() {
             @Override
@@ -82,9 +84,8 @@ public class addItemGUI extends JFrame {
             }
         });
 
-
-        chckbxMedium = new JCheckBox("Medium");
-        chckbxMedium.setBounds(205, 83, 87, 23);
+        chckbxMedium = new JCheckBox("Medium: $0.00");
+        chckbxMedium.setBounds(134, 108, 150, 23);
         contentPane.add(chckbxMedium);
         chckbxMedium.addActionListener(new ActionListener() {
             @Override
@@ -96,9 +97,8 @@ public class addItemGUI extends JFrame {
             }
         });
 
-
-        chckbxLarge = new JCheckBox("Large");
-        chckbxLarge.setBounds(293, 83, 128, 23);
+        chckbxLarge = new JCheckBox("Large: $0.00");
+        chckbxLarge.setBounds(134, 133, 150, 23);
         contentPane.add(chckbxLarge);
         chckbxLarge.addActionListener(new ActionListener() {
             @Override
@@ -111,22 +111,36 @@ public class addItemGUI extends JFrame {
         });
 
         JButton btnNewButton_1 = new JButton("Add to Cart");
-        btnNewButton_1.setBounds(175, 177, 117, 29);
+        btnNewButton_1.setBounds(167, 206, 117, 29);
         contentPane.add(btnNewButton_1);
 
         JLabel lblQuantity = new JLabel("Quantity:");
         lblQuantity.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-        lblQuantity.setBounds(81, 125, 87, 16);
+        lblQuantity.setBounds(81, 162, 87, 16);
         contentPane.add(lblQuantity);
 
         textField = new JTextField();
-        textField.setBounds(194, 120, 130, 26);
+        textField.setBounds(194, 157, 130, 26);
         contentPane.add(textField);
         textField.setColumns(10);
     }
-    public void setItemName(String itemName) {
+
+    public void setItemDetails(String itemName, double smallPrice, double mediumPrice, double largePrice) {
         this.itemName = itemName;
+        this.smallPrice = smallPrice;
+        this.mediumPrice = mediumPrice;
+        this.largePrice = largePrice;
+
         JLabel lblNewLabel = (JLabel) contentPane.getComponent(0);
         lblNewLabel.setText("Item: " + itemName);
+
+        chckbxSmall.setText("Small: $" + smallPrice);
+        chckbxMedium.setText("Medium: $" + mediumPrice);
+        chckbxLarge.setText("Large: $" + largePrice);
+
+        chckbxSmall.setSelected(false);
+        chckbxMedium.setSelected(false);
+        chckbxLarge.setSelected(false);
+        textField.setText("");
     }
 }

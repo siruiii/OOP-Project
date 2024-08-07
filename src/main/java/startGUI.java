@@ -68,7 +68,8 @@ public class startGUI extends JFrame {
 
   private void showMenu() {
       menuGUI menuFrame = new menuGUI();
-      menuFrame.setVisible(true);
       this.setVisible(false);
+      menuFrame.setVisible(true);
+
   }
 }

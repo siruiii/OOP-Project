@@ -63,7 +63,7 @@ public class menuGUI extends JFrame {
 
       StringBuilder displayText = new StringBuilder();
       for (MenuItem item : items) {
-          displayText.append(item.getName()).append(" - $").append(item.getSmallPrice()).append("  ★").append("\n");
+          displayText.append(item.getName()).append(" - ").append("  ★").append("\n");
       }
       textPane.setText(displayText.toString());
       addItemFrame = new addItemGUI(this);
@@ -78,12 +78,12 @@ public class menuGUI extends JFrame {
                         String selectedItem = textPane.getDocument().getText(
                             textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),
                             textPane.getDocument().getDefaultRootElement().getElement(rowStart).getEndOffset() -
-                                    textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset()
+                            textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset()
                         ).trim();
 
                         for (MenuItem item : items) {
                             if (selectedItem.startsWith(item.getName())) {
-                                addItemFrame.setItemName(item.getName());
+                                addItemFrame.setItemDetails(item.getName(), item.getSmallPrice(), item.getMediumPrice(), item.getLargePrice());
                                 setVisible(false);
                                 addItemFrame.setVisible(true); 
                                 break;
