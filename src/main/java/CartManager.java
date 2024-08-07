@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class CartManager {
-    private static ArrayList<Item> cart_items = new ArrayList<Item>();
+    public static ArrayList<Item> cart_items = new ArrayList<Item>();
 
     public static ArrayList<Item> readCart() {
         return cart_items;

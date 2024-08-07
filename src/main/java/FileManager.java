@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class FileManager {
 
-    private List<MenuItem> items;
+    private List<Item> items;
 
     public FileManager(String fileName) {
         items = new ArrayList<>();
@@ -24,7 +24,7 @@ public class FileManager {
                     double smallPrice = Double.parseDouble(parts[1]);
                     double mediumPrice = Double.parseDouble(parts[2]);
                     double largePrice = Double.parseDouble(parts[3]);
-                    items.add(new MenuItem(name, smallPrice, mediumPrice, largePrice));
+                    items.add(new Item(name, smallPrice, mediumPrice, largePrice));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -32,7 +32,7 @@ public class FileManager {
         }
     }
 
-    public List<MenuItem> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 }

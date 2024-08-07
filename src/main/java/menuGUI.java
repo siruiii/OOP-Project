@@ -59,10 +59,10 @@ public class menuGUI extends JFrame {
         contentPane.add(scrollPane);
 
     FileManager fileManager = new FileManager("https://replit.com/@kl3267/In-Store-Food-Ordering-System#src/main/java/itemfile.txt");
-      List<MenuItem> items = fileManager.getItems();
+      List<Item> items = fileManager.getItems();
 
       StringBuilder displayText = new StringBuilder();
-      for (MenuItem item : items) {
+      for (Item item : items) {
           displayText.append(item.getName()).append(" - ").append("  ★").append("\n");
       }
       textPane.setText(displayText.toString());
@@ -81,7 +81,7 @@ public class menuGUI extends JFrame {
                             textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset()
                         ).trim();
 
-                        for (MenuItem item : items) {
+                        for (Item item : items) {
                             if (selectedItem.startsWith(item.getName())) {
                                 addItemFrame.setItemDetails(item.getName(), item.getSmallPrice(), item.getMediumPrice(), item.getLargePrice());
                                 setVisible(false);
