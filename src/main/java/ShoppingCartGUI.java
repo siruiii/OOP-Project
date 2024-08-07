@@ -16,11 +16,11 @@ import javax.swing.text.StyledDocument;
 import javax.swing.JButton;
 
 public class ShoppingCartGUI {
+
     private JFrame frame;
     private JTextPane textPane;
     private int hoverLine = -1;
-    private int clickedLine = -1; // Track the line that was clicked
-    private final JButton btnNewButton = new JButton("Edit");
+    private int clickedLine = -1;  // Track the line that was clicked
 
     /**
      * Launch the application.
@@ -54,12 +54,12 @@ public class ShoppingCartGUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
-        textPane = new JTextPane(); // Corrected variable assignment
+        textPane = new JTextPane();  // Corrected variable assignment
         textPane.setBounds(33, 35, 377, 166);
         textPane.setEditable(false);
         frame.getContentPane().add(textPane);
 
-        StyledDocument doc = textPane.getStyledDocument(); // Moved this line after creating textPane
+        StyledDocument doc = textPane.getStyledDocument();  // Moved this line after creating textPane
         Style normalStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
         StyleConstants.setBackground(normalStyle, Color.WHITE);
         doc.setCharacterAttributes(0, doc.getLength(), normalStyle, true);
@@ -96,8 +96,13 @@ public class ShoppingCartGUI {
         lblNewLabel.setBounds(16, 7, 200, 16);
         frame.getContentPane().add(lblNewLabel);
 
-        btnNewButton.setBounds(33, 218, 118, 29);
-        frame.getContentPane().add(btnNewButton);
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.setBounds(33, 218, 118, 29);
+        frame.getContentPane().add(btnEdit);
+        // btnEdit.addActionListener(e -> {
+        //     EditItemGUI egui = new EditItemGUI();  // Create and show the edit window
+        //     egui.setVisible(true);
+        // });
 
         JButton btnDelete = new JButton("Delete");
         btnDelete.setBounds(163, 218, 118, 29);
@@ -128,15 +133,16 @@ public class ShoppingCartGUI {
         for (int i = 0; i < numLines; i++) {
             Element lineElem = textPane.getDocument().getDefaultRootElement().getElement(i);
             if (i == clickedLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(),
-                        lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
             } else if (i == hoverLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(),
-                        lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
             } else {
-                doc.setCharacterAttributes(lineElem.getStartOffset(),
-                        lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
             }
         }
+    }
+
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
     }
 }
