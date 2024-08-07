@@ -57,9 +57,16 @@ public class menuGUI extends JFrame {
             }
         });
 
-        JButton btnNewButton_1 = new JButton("Cart");
-        btnNewButton_1.setBounds(16, 237, 117, 29);
-        contentPane.add(btnNewButton_1);
+        JButton btnCart = new JButton("Cart");
+        btnCart.setBounds(16, 237, 117, 29);
+        contentPane.add(btnCart);
+        btnCart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ShoppingCartGUI cgui = new ShoppingCartGUI();
+                setVisible(false);
+                cgui.setVisible(true);
+            }
+        });
 
         JTextPane textPane = new JTextPane();
         textPane.setEditable(false);

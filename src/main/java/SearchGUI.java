@@ -25,7 +25,7 @@ public class SearchGUI extends JFrame {
 
     public SearchGUI() {
         // Initialize JFrame properties
-        setTitle("Search GUI");
+        setTitle("Search Menu");
         setBounds(100, 100, 450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -66,6 +66,15 @@ public class SearchGUI extends JFrame {
         JButton btnBack = new JButton("Back to Menu");
         btnBack.setBounds(6, 2, 117, 29);
         getContentPane().add(btnBack);
+        btnBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add logic to proceed to checkout
+                menuGUI mgui = new menuGUI();
+                setVisible(false);
+                mgui.setVisible(true);
+            }
+        });
 
         JLabel lblinstruction = new JLabel(" ");
         lblinstruction.setBounds(29, 245, 250, 16);
