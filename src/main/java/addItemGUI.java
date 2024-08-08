@@ -167,7 +167,7 @@ public class addItemGUI extends JFrame {
                             largePrice, quantity);
                     CartManager.addItem(newItem);
                     // System.out.println(newItem.getSize()+" is added to cart");
-                    // System.out.println(CartManager.count());
+                    // System.out.println(CartManager.getTotalCount());
                     JOptionPane.showMessageDialog(null,
                             "Added to cart: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
                             JOptionPane.INFORMATION_MESSAGE);

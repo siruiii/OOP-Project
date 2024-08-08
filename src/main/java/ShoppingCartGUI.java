@@ -6,6 +6,8 @@ import javax.swing.text.*;
 
 public class ShoppingCartGUI extends JFrame {
     private JTextPane textPane;
+    private JLabel lblTotalCount;
+    private JLabel lblTotalPrice;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -55,14 +57,13 @@ public class ShoppingCartGUI extends JFrame {
 
         textPane = new JTextPane();
         scrollPane.setViewportView(textPane);
-        displayCart();
 
 
-        JLabel lblNewLabel = new JLabel("Total Price: ");
-        lblNewLabel.setBounds(123, 242, 129, 16);
-        getContentPane().add(lblNewLabel);
+        lblTotalPrice = new JLabel("Total Price: N/A");
+        lblTotalPrice.setBounds(123, 242, 129, 16);
+        getContentPane().add(lblTotalPrice);
 
-        JLabel lblTotalCount = new JLabel("Count: ");
+        lblTotalCount = new JLabel("Total Count: N/A");
         lblTotalCount.setBounds(29, 242, 129, 16);
         getContentPane().add(lblTotalCount);
 
@@ -75,17 +76,31 @@ public class ShoppingCartGUI extends JFrame {
         Font currentFont = lblNewLabel_1.getFont();
         lblNewLabel_1.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
         getContentPane().add(lblNewLabel_1);
+
+        displayCart();
     }
     private void displayCart(){
         StringBuilder displayText = new StringBuilder();
-            for (Item item : CartManager.readCart()) {
+            for (Item item : CartManager.readCartItem()) {
+                double unitprice=0;
+                if(item.getSize() == "Small"){
+                    unitprice=item.getSmallPrice();
+                }else if(item.getSize() == "Medium"){
+                    unitprice=item.getMediumPrice();
+                }else if(item.getSize() == "Large"){
+                    unitprice=item.getLargePrice();
+                }
                 displayText.append(item.getName())
                         .append(" - Size: ")
                         .append(item.getSize())
-                        .append(" - Quantity: ")
+                        .append(" - Qty: ")
                         .append(item.getQuantity())
+                        .append(" - Unit Price: ")
+                        .append(unitprice)
                         .append("\n");
             }
             textPane.setText(displayText.toString());
+            lblTotalCount.setText("Count: "+CartManager.getTotalCount());
+            lblTotalPrice.setText("Total Price: "+CartManager.getTotalPrice());
     }
 }
