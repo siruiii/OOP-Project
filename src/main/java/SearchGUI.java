@@ -74,9 +74,9 @@ public class SearchGUI extends JFrame {
         scrollPane.setBounds(29, 95, 388, 150);
         getContentPane().add(scrollPane);
 
-        FileManager fileManager = new FileManager("itemfile.txt");
+        FileManager fileManager = new FileManager(
+                "itemfile.txt");
         List<Item> items = fileManager.getItems();
-
 
         JCheckBox chckbxFilter = new JCheckBox("Apply Filter");
         chckbxFilter.setBounds(29, 30, 109, 23);
@@ -117,17 +117,17 @@ public class SearchGUI extends JFrame {
                 List<Item> result = searchByName(items, input);
                 if (chckbxFilter.isSelected()) {
                     // Apply category filter
-                    if (cbxCategory.getSelectedItem()=="Food ONLY"){
+                    if (cbxCategory.getSelectedItem() == "Food ONLY") {
                         String selectedCategory = "Food";
                         result = filterByCategory(result, selectedCategory);
-                    }else if(cbxCategory.getSelectedItem()=="Drink ONLY"){
+                    } else if (cbxCategory.getSelectedItem() == "Drink ONLY") {
                         String selectedCategory = "Drink";
                         result = filterByCategory(result, selectedCategory);
                     }
 
                     // Apply rating filter
                     // if (!selectedRating.equals("All Rating")) {
-                    //     result = filterByRating(result, selectedRating);
+                    // result = filterByRating(result, selectedRating);
                     // }
                 }
 
@@ -135,7 +135,6 @@ public class SearchGUI extends JFrame {
                 display(result);
             }
         });
-
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -156,18 +155,18 @@ public class SearchGUI extends JFrame {
                                                 .getStartOffset())
                                 .trim();
 
-                                boolean found = false;
-                                for (Item item : items) {
-                                    if (selectedItem.startsWith(item.getName())) {
-                                        lblinstruction.setText("Double Click to Add " + item.getName());
-                                        found = true;
-                                        break;
-                                    }
-                                }
+                        boolean found = false;
+                        for (Item item : items) {
+                            if (selectedItem.startsWith(item.getName())) {
+                                lblinstruction.setText("Double Click to Add " + item.getName());
+                                found = true;
+                                break;
+                            }
+                        }
 
-                                if (!found) {
-                                    lblinstruction.setText(" ");
-                                }
+                        if (!found) {
+                            lblinstruction.setText(" ");
+                        }
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -211,7 +210,7 @@ public class SearchGUI extends JFrame {
     }
 
     private List<Item> filterByCategory(List<Item> items, String category) {
-    return items.stream()
+        return items.stream()
                 .filter(item -> item.getCategory().equals(category))
                 .collect(Collectors.toList());
     }
@@ -220,7 +219,7 @@ public class SearchGUI extends JFrame {
 
     // }
 
-    private List<Item> searchByName(List<Item> menu, String keyword){
+    private List<Item> searchByName(List<Item> menu, String keyword) {
         List<Item> search_results = new ArrayList<Item>();
         for (Item item : menu) {
             // Check if the item's name contains the search term
@@ -230,19 +229,21 @@ public class SearchGUI extends JFrame {
         }
         return search_results;
     }
+
     private void display(List<Item> items) {
         StringBuilder displayText = new StringBuilder();
-        if(CartManager.readCartItem().size()==0){
+        if (items.size() == 0) {
             textPane.setText("\n\n                         ---Sorry, 0 results found---\n\n");
-        }else{
-        for (Item item : items) {
-            displayText.append(item.getName())
-                    .append(" - Rating: ")
-                    .append(item.getRatingStatus())
-                    .append(" ★")
-                    .append("\n");
+        } else {
+            for (Item item : items) {
+                displayText.append(item.getName())
+                        .append(" - Rating: ")
+                        .append(item.getRatingStatus())
+                        .append(" ★")
+                        .append("\n");
+            }
+            textPane.setText(displayText.toString());
         }
-        textPane.setText(displayText.toString());}
     }
 
     private int getLineAtPosition(int pos) {
@@ -259,11 +260,14 @@ public class SearchGUI extends JFrame {
         for (int i = 0; i < numLines; i++) {
             Element lineElem = textPane.getDocument().getDefaultRootElement().getElement(i);
             if (i == clickedLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
             } else if (i == hoverLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
             } else {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
             }
         }
     }

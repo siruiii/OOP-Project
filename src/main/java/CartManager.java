@@ -37,8 +37,10 @@ public class CartManager {
         cart_items.add(item);
     }
 
-    public static void editItem(Item item, int quantity, int size) {
+    public static void editItem(Item item, int quantity, String size) {
         //edit a selected item
+        item.setQuantity(quantity);
+        item.setSize(size);
     }
     public static void deleteItem(Item item) {
         cart_items.remove(item);

@@ -36,6 +36,9 @@ public class Item {
     public String getSize() {
         return size;
     }
+    public void setSize(String s) {
+        this.size=s;
+    }
 
     public String getName() {
         return name;
@@ -47,6 +50,9 @@ public class Item {
 
     public int getQuantity() {
         return quantity;
+    }
+    public void setQuantity(int q) {
+        this.quantity=q;
     }
 
     public double getSmallPrice() {
