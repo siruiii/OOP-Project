@@ -89,6 +89,9 @@ public class ShoppingCartGUI extends JFrame {
     }
     private void displayCart(){
         StringBuilder displayText = new StringBuilder();
+        if(CartManager.readCartItem().size()==0){
+            textPane.setText("\n\n                    ---Shopping Cart is empty now---\n\n                    ---Back to Menu to add items---");
+        }else{
             for (Item item : CartManager.readCartItem()) {
                 double unitprice=0;
                 if(item.getSize() == "Small"){
@@ -110,5 +113,6 @@ public class ShoppingCartGUI extends JFrame {
             textPane.setText(displayText.toString());
             lblTotalCount.setText("Count: "+CartManager.getTotalCount());
             lblTotalPrice.setText("Total Price: "+CartManager.getTotalPrice());
+        }  
     }
 }
