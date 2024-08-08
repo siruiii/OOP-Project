@@ -1,19 +1,16 @@
-import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.*;
 
 public class WaitingGUI extends JFrame {
     private JLabel status;
-    private JLabel time;
+    private final JLabel time;
     private JLabel load;
     private Timer timer;
     private int remainTime;
     private int total;
-    private String[] stat = { "Received", "In Preparation", "Ready to Pick-Up" };
-    // keep track of the current status
+    private String[] stat = { "Payment Processing", "Received", "In Preparation", "Ready to Pick-Up" }; // keep track of the current status
     private int currStatInd = 0;
 
     // Constructor to set up the GUI
@@ -31,13 +28,12 @@ public class WaitingGUI extends JFrame {
 
         // Load and resize the GIF using ImageIcon
         try {
-            ImageIcon originalIcon = new ImageIcon("/Users/icyfloaty/Documents/CS_coding/OOP/Project/loading.gif");
+            ImageIcon originalIcon = new ImageIcon("/Users/icyfloaty/Documents/CS_coding/OOP/Final_Project/loading.gif");
             Image originalImage = originalIcon.getImage();
             Image scaledImage = originalImage.getScaledInstance(96, 96, Image.SCALE_DEFAULT);
             load = new JLabel(new ImageIcon(scaledImage), SwingConstants.CENTER);
         } catch (Exception e) {
             load = new JLabel("Loading...", SwingConstants.CENTER);
-            e.printStackTrace();
         }
         add(load);
 
@@ -45,37 +41,43 @@ public class WaitingGUI extends JFrame {
         add(time);
 
         // Start the simulation of the order process
-        simulateOrder(quantity);
+        simulateWait(quantity);
 
     }
 
-    // Method to simulate the order process
-    public void simulateOrder(int quantity) {
+    // Method to simulate the waiting process
+    private void simulateWait(int quantity) {
+        // Cancel any existing timer
         if (timer != null) {
-            timer.cancel(); // Cancel any existing timer
+            timer.cancel();
         }
-        remainTime = 20 * quantity; // Calculate remaining time based on quantity
-        total = remainTime;
         currStatInd = 0; // Reset the status to the first one
+        remainTime = 15 * quantity; // Estimate remaining time based on quantity
 
+        // default processing time is 20 seconds
+        if (remainTime < 20){
+            remainTime = 20;
+        }
+
+        total = remainTime;
         timer = new Timer(); // Create a new timer
 
         // Schedule the timer task
-        timer.scheduleAtFixedRate(createTTask(quantity), 0, 1000); // Start immediately, run every 1000 milliseconds (1 second)
+        timer.scheduleAtFixedRate(createTTask(), 0, 1000); // Start immediately, run every 1000 milliseconds (1 second)
     }
 
-    //create a new time task with override method
-    private TimerTask createTTask(final int quantity) {
+    // Method to Create a new time task with override method
+    private TimerTask createTTask() {
         return new TimerTask() {
             @Override
             public void run() {
-                handleTTask(quantity);
+                handleTTask();
             }
         };
     }
 
     // Method to handle the override method
-    private void handleTTask(int quantity) {
+    private void handleTTask() {
         // If there is remaining time, decrement it and update the UI
         if (remainTime > 0) {
             remainTime--;
@@ -83,23 +85,22 @@ public class WaitingGUI extends JFrame {
 
             // Determine the current phase based on the remaining time ratio
             double timeRatio = (double) remainTime / total;
-            if (timeRatio <= 0.1 && currStatInd < 2) {
-                currStatInd = 2; // "Ready to Pick-Up"
-            } else if (timeRatio <= 0.75 && currStatInd < 1) {
-                currStatInd = 1; // "In Preparation"
+            if (timeRatio <= 0.15 && currStatInd < 3) {
+                currStatInd = 3; // "Ready to Pick-Up"
+            } else if (timeRatio <= 0.75 && currStatInd < 2) {
+                currStatInd = 2; // "In Preparation"
+            } else if (timeRatio <= 0.85 && currStatInd < 1) {
+                currStatInd = 1; // "Received"
             }
 
         // If the status is complete, cancel the timer and open the rating page
         } else if (currStatInd == stat.length - 1) {
             timer.cancel();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    RatingGUI rating = new RatingGUI();
-                    // Close the waiting window before opening the rating page
-                    dispose();
-                    rating.showWait();
-                }
+            SwingUtilities.invokeLater(() -> {
+                RatingGUI rating = new RatingGUI();
+                // Close the waiting window before opening the rating page
+                dispose();
+                rating.showRate();
             });
         }
     }
@@ -110,10 +111,11 @@ public class WaitingGUI extends JFrame {
         time.setText("Estimated Time: " + remainTime + " seconds"); // Update the time label
     }
 
+    // Display this GUI
     public void showWait() {
         setVisible(true);
     }
-    
+
     /* Debugger
     public static void main(String[] args) {
         // Create an instance of the WaitingGUI with a sample quantity
@@ -121,5 +123,4 @@ public class WaitingGUI extends JFrame {
         gui.showWait();
     }
     */
-
 }

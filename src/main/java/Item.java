@@ -51,9 +51,6 @@ public class Item {
     public int getQuantity() {
         return quantity;
     }
-    public void setQuantity(int q) {
-        this.quantity=q;
-    }
 
     public double getSmallPrice() {
         return smallPrice;
@@ -65,6 +62,19 @@ public class Item {
 
     public double getLargePrice() {
         return largePrice;
+    }
+
+    public double getTotalRate() {
+        return totalRate;
+    }
+
+    public int getRateCount() {
+        return rateCount;
+    }
+
+    // Setter
+    public void setQuantity(int q) {
+        this.quantity=q;
     }
 
     // Add a rating to total sum

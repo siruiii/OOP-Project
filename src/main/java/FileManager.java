@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -37,5 +36,23 @@ public class FileManager {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    public void updateItemRating(String itemName, double newRating) {
+        for (Item item : items) {
+            if (item.getName().equals(itemName)) {
+                item.addRating(newRating);
+                break;
+            }
+        }
+    }
+
+    public void saveItems(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Item item : items) {
+                writer.write(item.getName() + "," + item.getSmallPrice() + "," + item.getMediumPrice() + ","
+                        + item.getLargePrice() + "," + item.getTotalRate() + "," + item.getRateCount() + "\n");
+            }
+        } catch (IOException e) {}
     }
 }

@@ -1,7 +1,7 @@
-import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 public class PaymentGUI extends JFrame {
     private int totalCount = 0;
@@ -129,22 +129,16 @@ public class PaymentGUI extends JFrame {
         // Buttons
         JPanel buttonPanel = new JPanel(new BorderLayout());
         JButton btnReturn = new JButton("Return");
-        btnReturn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ShoppingCartGUI cgui = new ShoppingCartGUI();
-                setVisible(false);
-                cgui.setVisible(true);
-            }
+        btnReturn.addActionListener((ActionEvent e) -> {
+            ShoppingCartGUI cgui = new ShoppingCartGUI();
+            setVisible(false);
+            cgui.setVisible(true);
         });
         JButton btnConfirm = new JButton("Confirm");
-        btnConfirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                WaitingGUI gui = new WaitingGUI(totalCount);
-                gui.showWait();
-                dispose();
-            }
+        btnConfirm.addActionListener((ActionEvent e) -> {
+            WaitingGUI gui = new WaitingGUI(totalCount);
+            gui.showWait();
+            dispose();
         });
         buttonPanel.add(btnReturn, BorderLayout.WEST);
         buttonPanel.add(btnConfirm, BorderLayout.EAST);
@@ -152,24 +146,16 @@ public class PaymentGUI extends JFrame {
     }
 
     private double getItemPrice(Item item) {
-        switch (item.getSize()) {
-            case "Small":
-                return item.getSmallPrice() * item.getQuantity();
-            case "Medium":
-                return item.getMediumPrice() * item.getQuantity();
-            case "Large":
-                return item.getLargePrice() * item.getQuantity();
-            default:
-                return 0;
-        }
+        return switch (item.getSize()) {
+            case "Small" -> item.getSmallPrice() * item.getQuantity();
+            case "Medium" -> item.getMediumPrice() * item.getQuantity();
+            case "Large" -> item.getLargePrice() * item.getQuantity();
+            default -> 0;
+        };
     }
 
     public void showPay() {
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new PaymentGUI().showPay();
     }
 
 }

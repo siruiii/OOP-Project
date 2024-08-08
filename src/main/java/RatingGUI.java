@@ -1,53 +1,141 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class RatingGUI extends JFrame {
-  private List<Item> products;
-  private JTextArea feedbackArea;
+    private final JPanel panel;
+    private final JButton finishButton;
+    private final List<Item> cartItems;
+    private JTextArea feedbackTextArea;
+    private List<JComboBox<String>> ratingComboBoxes;
+    private final FileManager file;
 
-  public RatingGUI(List<Item> products) {
-    setTitle("Rating Page"); // Set the title of the window
-    setSize(300, 200); // Set the size of the window
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Define the close operation
-    setLayout(new FlowLayout()); // Set the layout manager
 
-    feedbackArea = new JTextArea(5, 30);
-    feedbackArea.setBorder(BorderFactory.createTitledBorder("Additional Feedback"));
-    add(feedbackArea, BorderLayout.NORTH);
+    public RatingGUI() {
+        file = new FileManager("itemfile.txt"); // Load items from file
+        cartItems = CartManager.readCartItem(); // Get items from the cart
+        ratingComboBoxes = new ArrayList<>();
 
-    JButton submitButton = new JButton("Submit"); // Create the submit button
-    add(submitButton, BorderLayout.SOUTH); // Add the button to the bottom
+        setTitle("Rating & Feedback");
+        setBounds(100, 100, 450, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    submitButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        // Step 1: Collect the new ratings from the UI
-        Map<String, Integer> newRatings = collectRatings();
+        // Main panel with GridBagLayout for precise control
+        panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Step 2: Get the feedback from the text area
-        String feedback = feedbackArea.getText();
+        // Order complete label, centered and bold
+        JLabel orderCompleteLabel = new JLabel("Yay! The order is complete!");
+        orderCompleteLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(orderCompleteLabel, gbc);
 
-        try {
-          // Step 3: Process the ratings and save feedback
-          RateManager.processRatings(newRatings);
-          RateManager.saveFeedback(feedback)
+        // Adding some space between the order complete label and the next section
+        gbc.gridy++;
+        panel.add(Box.createRigidArea(new Dimension(0, 5)), gbc);
 
-          // Step 4: Show a thank you message
-          JOptionPane.showMessageDialog(RatingGUI.this, "Thank you for your feedback!");
+        // Instruction label before the rating spinners
+        JLabel instructionLabel = new JLabel("Enjoying what you have? Please consider rating from 0 to 5 stars!");
+        gbc.gridy++;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(instructionLabel, gbc);
 
-          // Step 5: Exit the application
-          System.exit(0);
-        } catch (IOException ioException) {
-          // Handle any IO exceptions that occur
-          JOptionPane.showMessageDialog(RatingGUI.this, "Error updating the menu file.", "Error",
-              JOptionPane.ERROR_MESSAGE);
-          ioException.printStackTrace();
+        // Adding each item and its rating spinner to the panel
+        gbc.gridwidth = 1;
+        for (Item item : cartItems) {
+            gbc.gridy++;
+            gbc.gridx = 0;
+
+            JLabel itemLabel = new JLabel(item.getName());
+            panel.add(itemLabel, gbc);
+
+            gbc.gridx = 1;
+            String[] ratings = {"", "0", "1", "2", "3", "4", "5"};
+            JComboBox<String> ratingComboBox = new JComboBox<>(ratings);
+            ratingComboBox.setPreferredSize(new Dimension(100, 25));
+            ratingComboBoxes.add(ratingComboBox);
+            panel.add(ratingComboBox, gbc);
+
+            gbc.gridx = 2;
+            JLabel starLabel = new JLabel("★");
+            starLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+            panel.add(starLabel, gbc);
         }
-      }
-    });
 
-    setVisible(true); // Make the rating page visible
-  }
+        // Feedback label, aligned to the left
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridwidth = 3;
+        JLabel feedbackLabel = new JLabel("Questions? Complaints? Feel free to comment below:");
+        feedbackLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(feedbackLabel, gbc);
+
+        // Feedback text area
+        gbc.gridy++;
+        feedbackTextArea = new JTextArea(7, 30); // Increased height for feedback box
+        JScrollPane feedbackScrollPane = new JScrollPane(feedbackTextArea);
+        feedbackScrollPane.setPreferredSize(new Dimension(400, 100));
+        panel.add(feedbackScrollPane, gbc);
+
+        // Finish button, aligned to the bottom right
+        gbc.gridy++;
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.SOUTHEAST;
+        gbc.fill = GridBagConstraints.NONE;  // Prevent resizing the button
+        gbc.weightx = 0;  // Do not grow horizontally
+        gbc.weighty = 0;  // Do not grow vertically
+        finishButton = new JButton("Finish");
+        finishButton.setPreferredSize(new Dimension(100, 30));
+        finishButton.addActionListener(new FinishButtonListener());
+        panel.add(finishButton, gbc);
+
+        add(panel);
+    }
+
+    // Listener for the Finish button
+    private class FinishButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Update ratings in FileManager
+            for (int i = 0; i < cartItems.size(); i++) {
+                Item cartItem = cartItems.get(i);
+                String rating = (String) ratingComboBoxes.get(i).getSelectedItem();
+
+                if (rating != null && !rating.isEmpty()) {
+                    double ratingValue = Double.parseDouble(rating);
+                    file.updateItemRating(cartItem.getName(), ratingValue);
+                }
+            }
+            // Save updated items back to menuitem.txt
+            file.saveItems("itemfile.txt");
+
+            // Write feedback to Feedback.txt
+            try (BufferedWriter feedbackWriter = new BufferedWriter(new FileWriter("Feedback.txt", true))) {
+                String feedback = feedbackTextArea.getText().trim();
+                if (!feedback.isEmpty()) {
+                    feedbackWriter.write(feedback + "\n\n");
+                }
+            } catch (IOException ioException) {}
+
+            // Show thank you message in a pop-up box
+            JOptionPane.showMessageDialog(panel, "Thank you so much! Bye for Now!", "Message", JOptionPane.INFORMATION_MESSAGE);
+            dispose(); // Close the GUI
+        }
+    }
+
+    public void showRate() {
+        setVisible(true);
+    }
 }
