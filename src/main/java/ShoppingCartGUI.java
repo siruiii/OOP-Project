@@ -64,7 +64,7 @@ public class ShoppingCartGUI extends JFrame {
         lblTotalPrice.setBounds(123, 242, 129, 16);
         getContentPane().add(lblTotalPrice);
 
-        lblTotalCount = new JLabel("Total Count: N/A");
+        lblTotalCount = new JLabel("Item Count: N/A");
         lblTotalCount.setBounds(29, 242, 129, 16);
         getContentPane().add(lblTotalCount);
 
@@ -90,6 +90,8 @@ public class ShoppingCartGUI extends JFrame {
     private void displayCart(){
         StringBuilder displayText = new StringBuilder();
         if(CartManager.readCartItem().size()==0){
+            lblTotalCount.setText("Item Count: 0");
+            lblTotalPrice.setText("Total Price: 0");
             textPane.setText("\n\n                    ---Shopping Cart is empty now---\n\n                    ---Back to Menu to add items---");
         }else{
             for (Item item : CartManager.readCartItem()) {
@@ -111,7 +113,7 @@ public class ShoppingCartGUI extends JFrame {
                         .append("\n");
             }
             textPane.setText(displayText.toString());
-            lblTotalCount.setText("Count: "+CartManager.getTotalCount());
+            lblTotalCount.setText("Item Count: "+CartManager.getTotalCount());
             lblTotalPrice.setText("Total Price: "+CartManager.getTotalPrice());
         }  
     }

@@ -1,8 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.swing.*;
 import javax.swing.text.*;
+import java.util.ArrayList;
 
 public class SearchGUI extends JFrame {
 
@@ -33,35 +36,6 @@ public class SearchGUI extends JFrame {
         JLabel btnSearch = new JLabel("Search");
         btnSearch.setBounds(29, 65, 61, 16);
         getContentPane().add(btnSearch);
-
-        textField = new JTextField();
-        textField.setBounds(92, 60, 215, 26);
-        getContentPane().add(textField);
-        textField.setColumns(10);
-
-        JComboBox<String> cbxCategory = new JComboBox<>();
-        cbxCategory.setBounds(138, 30, 145, 27);
-        cbxCategory.addItem("Food & Drink");
-        cbxCategory.addItem("Food ONLY");
-        cbxCategory.addItem("Drink ONLY");
-        getContentPane().add(cbxCategory);
-
-        JComboBox<String> cbxRating = new JComboBox<>();
-        cbxRating.setBounds(287, 30, 130, 27);
-        cbxRating.addItem("All Rating");
-        cbxRating.addItem("Rating >4★ ");
-        cbxRating.addItem("Rating >3★ ");
-        cbxRating.addItem("Rating >2★ ");
-        cbxRating.addItem("Rating >1★ ");
-        getContentPane().add(cbxRating);
-
-        JButton btnEnter = new JButton("Enter");
-        btnEnter.setBounds(319, 60, 98, 29);
-        getContentPane().add(btnEnter);
-
-        JCheckBox chckbxFilter = new JCheckBox("Apply Filter");
-        chckbxFilter.setBounds(29, 30, 109, 23);
-        getContentPane().add(chckbxFilter);
 
         JButton btnBack = new JButton("Back to Menu");
         btnBack.setBounds(6, 2, 117, 29);
@@ -102,7 +76,66 @@ public class SearchGUI extends JFrame {
 
         FileManager fileManager = new FileManager("itemfile.txt");
         List<Item> items = fileManager.getItems();
-        displayItems(items);
+
+
+        JCheckBox chckbxFilter = new JCheckBox("Apply Filter");
+        chckbxFilter.setBounds(29, 30, 109, 23);
+        getContentPane().add(chckbxFilter);
+
+        JComboBox<String> cbxCategory = new JComboBox<>();
+        cbxCategory.setBounds(138, 30, 145, 27);
+        cbxCategory.addItem("Food & Drink");
+        cbxCategory.addItem("Food ONLY");
+        cbxCategory.addItem("Drink ONLY");
+        getContentPane().add(cbxCategory);
+
+        JComboBox<String> cbxRating = new JComboBox<>();
+        cbxRating.setBounds(287, 30, 130, 27);
+        cbxRating.addItem("All Rating");
+        cbxRating.addItem("Rating >4★ ");
+        cbxRating.addItem("Rating >3★ ");
+        cbxRating.addItem("Rating >2★ ");
+        cbxRating.addItem("Rating >1★ ");
+        getContentPane().add(cbxRating);
+
+        textField = new JTextField();
+        textField.setBounds(92, 60, 215, 26);
+        getContentPane().add(textField);
+        textField.setColumns(10);
+
+        JButton btnEnter = new JButton("Enter");
+        btnEnter.setBounds(319, 60, 98, 29);
+        getContentPane().add(btnEnter);
+
+        btnEnter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the text from the textField
+                String input = textField.getText();
+
+                // String selectedRating = (String) cbxRating.getSelectedItem();
+                List<Item> result = searchByName(items, input);
+                if (chckbxFilter.isSelected()) {
+                    // Apply category filter
+                    if (cbxCategory.getSelectedItem()=="Food ONLY"){
+                        String selectedCategory = "Food";
+                        result = filterByCategory(result, selectedCategory);
+                    }else if(cbxCategory.getSelectedItem()=="Drink ONLY"){
+                        String selectedCategory = "Drink";
+                        result = filterByCategory(result, selectedCategory);
+                    }
+
+                    // Apply rating filter
+                    // if (!selectedRating.equals("All Rating")) {
+                    //     result = filterByRating(result, selectedRating);
+                    // }
+                }
+
+                // Display the result list
+                display(result);
+            }
+        });
+
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -123,12 +156,18 @@ public class SearchGUI extends JFrame {
                                                 .getStartOffset())
                                 .trim();
 
-                        for (Item item : items) {
-                            if (selectedItem.startsWith(item.getName())) {
-                                lblinstruction.setText("Double Click to Add "+item.getName());
-                                break;
-                            }
-                        }
+                                boolean found = false;
+                                for (Item item : items) {
+                                    if (selectedItem.startsWith(item.getName())) {
+                                        lblinstruction.setText("Double Click to Add " + item.getName());
+                                        found = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!found) {
+                                    lblinstruction.setText(" ");
+                                }
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -171,8 +210,31 @@ public class SearchGUI extends JFrame {
         });
     }
 
-    private void displayItems(List<Item> items) {
+    private List<Item> filterByCategory(List<Item> items, String category) {
+    return items.stream()
+                .filter(item -> item.getCategory().equals(category))
+                .collect(Collectors.toList());
+    }
+
+    // private List<Item> filterByRating(List<Item> items, String rating) {
+
+    // }
+
+    private List<Item> searchByName(List<Item> menu, String keyword){
+        List<Item> search_results = new ArrayList<Item>();
+        for (Item item : menu) {
+            // Check if the item's name contains the search term
+            if (item.getName() != null && item.getName().toLowerCase().contains(keyword.toLowerCase())) {
+                search_results.add(item);
+            }
+        }
+        return search_results;
+    }
+    private void display(List<Item> items) {
         StringBuilder displayText = new StringBuilder();
+        if(CartManager.readCartItem().size()==0){
+            textPane.setText("\n\n                         ---Sorry, 0 results found---\n\n");
+        }else{
         for (Item item : items) {
             displayText.append(item.getName())
                     .append(" - Rating: ")
@@ -180,7 +242,7 @@ public class SearchGUI extends JFrame {
                     .append(" ★")
                     .append("\n");
         }
-        textPane.setText(displayText.toString());
+        textPane.setText(displayText.toString());}
     }
 
     private int getLineAtPosition(int pos) {
