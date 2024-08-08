@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.text.*;
@@ -67,9 +68,16 @@ public class ShoppingCartGUI extends JFrame {
         lblTotalCount.setBounds(29, 242, 129, 16);
         getContentPane().add(lblTotalCount);
 
-        JButton btnResetShoppingCart = new JButton("Reset");
-        btnResetShoppingCart.setBounds(346, 2, 98, 29);
-        getContentPane().add(btnResetShoppingCart);
+        JButton btnReset = new JButton("Reset");
+        btnReset.setBounds(346, 2, 98, 29);
+        btnReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CartManager.resetCart();
+                displayCart();
+            }
+        });
+        getContentPane().add(btnReset);
 
         JLabel lblNewLabel_1 = new JLabel("Double Click to Edit");
         lblNewLabel_1.setBounds(29, 210, 223, 16);
