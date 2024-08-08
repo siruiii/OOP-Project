@@ -51,6 +51,9 @@ public class ShoppingCartGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Add logic to proceed to checkout
                 System.out.println("Checkout button clicked");
+                PaymentGUI paymentGUI = new PaymentGUI();
+                setVisible(false);
+                paymentGUI.showPay();
             }
         });
         getContentPane().add(btnCheckout);
