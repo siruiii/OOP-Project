@@ -1,161 +1,335 @@
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 public class PaymentGUI extends JFrame {
-    private int totalCount = 0;
+    private final JPanel mainPanel;
+    private JPanel discountPanel;
+    private final PayManager pay;
+    private JTextArea totalPLb;
+    private JTextField couponField;
+    private JComboBox<String> payComboBox;
+    private JCheckBox receiptCheckbox;
+
+    private double totalPrice = CartManager.getTotalPrice();
+    private final double fee = 1.99;
 
     public PaymentGUI() {
+        // Initialize PayManager
+        pay = new PayManager();
+
+        // Set up UI components
         setTitle("Payment");
-        setBounds(100, 100, 450, 400);
+        setBounds(100, 100, 465, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Main panel with BoxLayout for vertical layout
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        // Main content panel
+        mainPanel = createMainPanel(); 
         add(mainPanel, BorderLayout.CENTER);
 
-        // Header labels
-        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.setBorder(new LineBorder(Color.BLACK));
-        headerPanel.setBackground(Color.WHITE);
-        headerPanel.setMaximumSize(new Dimension(450, 30));
-        JLabel itemLabel = new JLabel("ITEM");
-        JLabel sizeLabel = new JLabel("SIZE");
-        JLabel quantityLabel = new JLabel("QUANTITY");
-        JLabel priceLabel = new JLabel("PRICE");
+        // Add the mainPanel to a JScrollPane
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scrollPane, BorderLayout.CENTER);
 
-        Font headerFont = new Font("Arial", Font.BOLD, 16);
-        itemLabel.setFont(headerFont);
-        sizeLabel.setFont(headerFont);
-        quantityLabel.setFont(headerFont);
-        priceLabel.setFont(headerFont);
+        // Button panel
+        JPanel buttonPanel = createButtonPanel();
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        headerPanel.add(itemLabel);
-        headerPanel.add(Box.createHorizontalStrut(100));  // Space between columns
-        headerPanel.add(sizeLabel);
-        headerPanel.add(Box.createHorizontalStrut(40));  // Space between columns
-        headerPanel.add(quantityLabel);
-        headerPanel.add(Box.createHorizontalStrut(40));  // Space between columns
-        headerPanel.add(priceLabel);
-        mainPanel.add(headerPanel);
+    }
 
-        // Cart items panel
+    // Creates the main content panel containing the order summary, payment method, coupon code input, etc
+    private JPanel createMainPanel() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Vertical layout for stacking components
+
+        mainPanel.add(createTitlePanel());
+        mainPanel.add(Box.createVerticalStrut(10)); // Adds vertical space
+
+        // Receipt
+        mainPanel.add(createHeaderPanel()); 
+        mainPanel.add(createItemsPanel()); 
+        if (startGUI.feeCheck()) {
+            mainPanel.add(createFeePanel());
+        }
+
+        mainPanel.add(createTotalPanel());
+
+        mainPanel.add(Box.createVerticalStrut(30)); // Adds vertical space
+
+        mainPanel.add(createPayPanel()); // pay
+        mainPanel.add(createCouponPanel()); // coupon
+        mainPanel.add(createReceiptPanel()); // receipt
+
+        return mainPanel; // Return the fully assembled main panel
+    }
+
+    // Title panel
+    private JPanel createTitlePanel() {
+        JLabel TitleLabel = new JLabel("Order Summary"); // "Order Summary" label
+        TitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        TitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Ensure the label spans the full width
+        JPanel TitlePanel = new JPanel(new BorderLayout());
+        TitlePanel.add(TitleLabel, BorderLayout.WEST);
+        TitlePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+
+        return TitlePanel;
+    }
+
+    // Header panel with column labels
+    private JPanel createHeaderPanel() {
+        JPanel headerPanel = setUpPanel();
+
+        Font headerFont = new Font("Arial", Font.BOLD, 16); 
+        headerPanel.add(createLabel("ITEM", headerFont));
+        headerPanel.add(Box.createHorizontalStrut(100));
+        headerPanel.add(createLabel("SIZE", headerFont));
+        headerPanel.add(Box.createHorizontalStrut(40)); 
+        headerPanel.add(createLabel("QUANTITY", headerFont));
+        headerPanel.add(Box.createHorizontalStrut(40));
+        headerPanel.add(createLabel("PRICE", headerFont));
+
+        return headerPanel;
+    }
+
+    // Item Panel that displays all things in the cart
+    private JPanel createItemsPanel() {
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
-        mainPanel.add(itemsPanel);
 
-        // Cart items
-        for (Item item : CartManager.readCartItem()) {
-            JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            itemPanel.setBorder(new LineBorder(Color.GRAY));
+        for (Item item : CartManager.getSortedCart()) {
+            JPanel itemPanel = new JPanel();
+            itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
+            itemPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
             itemPanel.setBackground(Color.WHITE);
-            itemPanel.setMaximumSize(new Dimension(453, 45));  // Adjust the height to accommodate wrapping
 
-            JTextArea itemName = new JTextArea(item.getName());
-            JTextArea itemSize = new JTextArea(item.getSize());
-            JTextArea itemQuantity = new JTextArea(String.valueOf(item.getQuantity()));
-            JTextArea itemPrice = new JTextArea("$" + String.format("%.2f", getItemPrice(item)));
+            Dimension size = new Dimension(450, 50);
+            itemPanel.setPreferredSize(size);
+            itemPanel.setMinimumSize(size);
+            itemPanel.setMaximumSize(size);
 
-            totalCount += item.getQuantity();
-
-            itemName.setLineWrap(true);
-            itemSize.setLineWrap(true);
-            itemQuantity.setLineWrap(true);
-            itemPrice.setLineWrap(true);
-
-            itemName.setWrapStyleWord(true);
-            itemSize.setWrapStyleWord(true);
-            itemQuantity.setWrapStyleWord(true);
-            itemPrice.setWrapStyleWord(true);
-
-            itemName.setEditable(false);
-            itemSize.setEditable(false);
-            itemQuantity.setEditable(false);
-            itemPrice.setEditable(false);
-
-            itemName.setOpaque(false);
-            itemSize.setOpaque(false);
-            itemQuantity.setOpaque(false);
-            itemPrice.setOpaque(false);
-
-            itemName.setPreferredSize(new Dimension(143, 40));  // Set preferred size for wrapping
-            itemSize.setPreferredSize(new Dimension(82, 40));
-            itemQuantity.setPreferredSize(new Dimension(125, 40));
-            itemPrice.setPreferredSize(new Dimension(60, 40));
-
-            itemPanel.add(itemName);
-            itemPanel.add(itemSize);
-            itemPanel.add(itemQuantity);
-            itemPanel.add(itemPrice);
+            Font font = new Font("Arial", Font.PLAIN, 14); 
+            itemPanel.add(createTextArea(item.getName(), 129, 40, font, true));
+            itemPanel.add(createTextArea(item.getSize(), 70, 40, font, true));
+            itemPanel.add(createTextArea(String.valueOf(item.getQuantity()), 114,40, font, true));
+            itemPanel.add(createTextArea("$" + String.format("%.2f", item.getItemPrice()), 60, 40, font, true));
 
             itemsPanel.add(itemPanel);
         }
 
-        // Total price in one line
-        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        totalPanel.setBorder(new LineBorder(Color.BLACK));
-        totalPanel.setBackground(Color.WHITE);
-        totalPanel.setMaximumSize(new Dimension(450, 30));  // Limit the height of the total panel
-        JTextArea totalTLb = new JTextArea("Total:");
-        JTextArea totalPLb = new JTextArea("$" + String.format("%.2f", CartManager.getTotalPrice()));
+        return itemsPanel;
+    }
 
-        totalTLb.setFont(headerFont);
-        totalPLb.setFont(headerFont);
+    // Optional Takeout fee panel
+    private JPanel createFeePanel() {
+        JPanel feePanel = setUpPanel();
 
-        totalTLb.setLineWrap(true);
-        totalPLb.setLineWrap(true);
+        JTextArea feetxtLb = createTextArea("Takeout Fee", 361, 30, new Font("Arial", Font.PLAIN, 14));
+        JTextArea feeLb = createTextArea("$" + String.format("%.2f", fee), 64, 30, new Font("Arial", Font.PLAIN, 14));
 
-        totalTLb.setWrapStyleWord(true);
-        totalPLb.setWrapStyleWord(true);
+        feePanel.add(feetxtLb);
+        feePanel.add(feeLb);
 
-        totalTLb.setEditable(false);
-        totalPLb.setEditable(false);
+        return feePanel;
+    }
 
-        totalTLb.setOpaque(false);
-        totalPLb.setOpaque(false);
+    private void showDiscountPanel(double discount) {
+        if (discountPanel != null) {
+            mainPanel.remove(discountPanel); // Remove the existing discount panel if present
+        }
 
-        totalTLb.setPreferredSize(new Dimension(361, 30));
-        totalPLb.setPreferredSize(new Dimension(64, 30));
+        discountPanel = setUpPanel();
+
+        JLabel discountLabel = new JLabel("Discount:");
+        discountLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        JLabel percentLabel = new JLabel(String.format("%.0f%% off", discount)); // Show percentage off
+        percentLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        discountPanel.add(discountLabel);
+        discountPanel.add(Box.createHorizontalStrut(300)); // Adjust spacing as needed
+        discountPanel.add(percentLabel);
+
+        mainPanel.add(discountPanel, mainPanel.getComponentCount() - 5); // Add before totalPanel
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    // Total price panel
+    private JPanel createTotalPanel() {
+        JPanel totalPanel = setUpPanel();
+
+        if(startGUI.feeCheck()){
+            totalPrice += fee;
+        }
+
+        Font font = new Font("Arial", Font.BOLD, 16); // Font for total price
+        JTextArea totalTLb = createTextArea("Total:", 361, 30, font);
+        totalPLb = createTextArea("$" + String.format("%.2f", totalPrice), 64, 30, font);
 
         totalPanel.add(totalTLb);
         totalPanel.add(totalPLb);
 
-        mainPanel.add(totalPanel);
+        return totalPanel;
+    }
 
-        // Buttons
-        JPanel buttonPanel = new JPanel(new BorderLayout());
-        JButton btnReturn = new JButton("Return");
-        btnReturn.addActionListener((ActionEvent e) -> {
-            ShoppingCartGUI cgui = new ShoppingCartGUI();
+
+    // Payment method selection panel
+    private JPanel createPayPanel() {
+        JPanel payPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel payLabel = new JLabel("Select Payment Method:");
+        payComboBox = new JComboBox<>(new String[] { "Select...", "Credit/Debit Card", "Apple Pay", "Cash" });
+
+        payPanel.add(payLabel);
+        payPanel.add(payComboBox);
+
+        return payPanel;
+    }
+
+    // Coupon code input panel
+    private JPanel createCouponPanel() {
+        JPanel couponPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel couponLabel = new JLabel("Apply Coupon Code (once only):");
+        couponPanel.add(couponLabel);
+
+        couponField = new JTextField(10);
+        couponPanel.add(couponField);
+
+        JButton applyCouponButton = new JButton("Apply"); 
+        applyCouponButton.addActionListener(e -> {
+            String code = couponField.getText().trim();
+            if (!code.isEmpty()) {
+                double discount = pay.applyDiscount(code);
+                if (discount > 0) {
+                    double percentageOff = (1 - discount) * 100; // Calculate percentage off
+                    totalPrice *= discount;
+                    totalPLb.setText("$" + String.format("%.2f", totalPrice)); 
+                    JOptionPane.showMessageDialog(PaymentGUI.this, "Coupon applied Successfully!", "Coupon Applied", JOptionPane.INFORMATION_MESSAGE);
+                    showDiscountPanel(percentageOff); // Show the discount panel
+                } else if (discount == 0) {
+                    JOptionPane.showMessageDialog(PaymentGUI.this, "Expired coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
+                } else{
+                    JOptionPane.showMessageDialog(PaymentGUI.this, "Invalid coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } 
+        });
+        couponPanel.add(applyCouponButton); 
+
+        return couponPanel;
+    }
+
+    // Receipt checkbox Panel
+    private JPanel createReceiptPanel() {
+        // Save order summary checkbox (aligned to left)
+        receiptCheckbox = new JCheckBox("Save order summary as text file");
+        JPanel receiptPanel = new JPanel(new BorderLayout());
+        receiptPanel.add(receiptCheckbox, BorderLayout.WEST);
+        receiptPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));  // Allow full width
+        return receiptPanel;
+    }
+
+    // Buttons at the bottom of the Page
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new BorderLayout()); 
+        JButton btnReturn = new JButton("Return"); 
+        // "Return" button to go back to Cart
+        btnReturn.addActionListener(e -> {
+            ShoppingCartGUI cgui = new ShoppingCartGUI(); 
             setVisible(false);
-            cgui.setVisible(true);
+            cgui.setVisible(true); 
         });
+
         JButton btnConfirm = new JButton("Confirm");
-        btnConfirm.addActionListener((ActionEvent e) -> {
-            WaitingGUI gui = new WaitingGUI(totalCount);
-            gui.showWait();
-            dispose();
+        // "Confirm" button to go to the Waiting Page
+        btnConfirm.addActionListener(e -> {
+            if (payComboBox.getSelectedIndex() == 0) {
+                // Show warning if no payment method is selected
+                JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
+            } else {
+                 // Print Receipt if the checkbox is selected
+                if (receiptCheckbox.isSelected()) {
+                    pay.printReceipt(
+                        CartManager.readCartItem(), // List of items in the cart
+                        (String) payComboBox.getSelectedItem(), // Selected payment method
+                        totalPrice, // Total price of the order
+                        fee // Takeout fee amount
+                    );
+                }
+                pay.saveDiscounts("Discount.txt");
+                WaitingGUI gui = new WaitingGUI(CartManager.getTotalCount());
+                gui.showWait();
+                dispose();
+            }
         });
+
         buttonPanel.add(btnReturn, BorderLayout.WEST);
         buttonPanel.add(btnConfirm, BorderLayout.EAST);
-        add(buttonPanel, BorderLayout.SOUTH);
+
+        return buttonPanel; // Return the assembled button panel
     }
 
-    private double getItemPrice(Item item) {
-        return switch (item.getSize()) {
-            case "Small" -> item.getSmallPrice() * item.getQuantity();
-            case "Medium" -> item.getMediumPrice() * item.getQuantity();
-            case "Large" -> item.getLargePrice() * item.getQuantity();
-            default -> 0;
-        };
+     // Utility Method to Create JLabel with specified text, font, and alignment.
+    private JLabel createLabel(String text, Font font, float alignment) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setAlignmentX(alignment);
+        return label;
     }
 
+    // Overloaded method to create a JLabel with default center alignment
+    private JLabel createLabel(String text, Font font) {
+        return createLabel(text, font, Component.CENTER_ALIGNMENT);
+    }
+
+    // Utility Method to Creates a JTextArea with specified text, width, height, and font
+    private JTextArea createTextArea(String text, int width, int height, Font font) {
+        JTextArea textArea = new JTextArea(text);
+
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setOpaque(false);
+        textArea.setPreferredSize(new Dimension(width, height));
+        textArea.setFont(font);
+
+        return textArea;
+    }
+
+    // Overloaded Method to make sure the text is center alignment in Y-axis
+    private JTextArea createTextArea(String text, int width, int height, Font font, boolean centered) {
+        JTextArea textArea = new JTextArea(text);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true); 
+        textArea.setEditable(false);
+        textArea.setOpaque(false);
+        textArea.setPreferredSize(new Dimension(width, height));
+        textArea.setFont(font); 
+
+        if (centered) {
+            // Set alignment and adjust margins for vertical centering
+            textArea.setAlignmentY(Component.CENTER_ALIGNMENT);
+            textArea.setMargin(new Insets(5, 5, 5, 5));
+        }
+
+        return textArea;
+    }
+
+    // Utility Method for default Panel setting
+    private JPanel setUpPanel(){
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p.setBorder(new LineBorder(Color.BLACK));
+        p.setBackground(Color.WHITE);
+        p.setMaximumSize(new Dimension(450, 30));
+
+        return p;
+    }
+
+    // Display Method
     public void showPay() {
         setVisible(true);
     }
-
 }

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class startGUI extends JFrame {
-
+  private static boolean isTakeOut = false;
   private JPanel contentPane;
 
   /**
@@ -59,16 +59,20 @@ public class startGUI extends JFrame {
     btnNewButton_1.setBounds(268, 141, 101, 37);
     btnNewButton_1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        isTakeOut = true;
         entermenu();
       }
     });
     contentPane.add(btnNewButton_1);
   }
 
+  public static boolean feeCheck(){
+    return isTakeOut;
+  }
+
   private void entermenu() {
     menuGUI menuFrame = new menuGUI();
     this.setVisible(false);
     menuFrame.setVisible(true);
-
   }
 }

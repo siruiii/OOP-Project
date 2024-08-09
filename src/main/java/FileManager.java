@@ -50,9 +50,11 @@ public class FileManager {
     public void saveItems(String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Item item : items) {
-                writer.write(item.getName() + "," + item.getSmallPrice() + "," + item.getMediumPrice() + ","
-                        + item.getLargePrice() + "," + item.getTotalRate() + "," + item.getRateCount() + "\n");
+                writer.write(item.getName() + "," + item.getCategory() + "," + item.getSmallPrice() + ","
+                             + item.getMediumPrice() + "," + item.getLargePrice() + "," + item.getTotalRate() + "," 
+                             + item.getRateCount() + "\n");
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 }

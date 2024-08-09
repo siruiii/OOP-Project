@@ -72,6 +72,16 @@ public class Item {
         return rateCount;
     }
 
+    // Calculate the total price of each item
+    public double getItemPrice() {
+        return switch (size) {
+            case "Small" -> smallPrice * quantity;
+            case "Medium" -> mediumPrice * quantity;
+            case "Large" -> largePrice * quantity;
+            default -> 0;
+        };
+    }
+
     // Setter
     public void setQuantity(int q) {
         this.quantity=q;
