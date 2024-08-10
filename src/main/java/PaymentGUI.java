@@ -225,7 +225,7 @@ public class PaymentGUI extends JFrame {
     // Receipt checkbox Panel
     private JPanel createReceiptPanel() {
         // Save order summary checkbox (aligned to left)
-        receiptCheckbox = new JCheckBox("Save order summary as text file");
+        receiptCheckbox = new JCheckBox("Get Receipt as text file");
         JPanel receiptPanel = new JPanel(new BorderLayout());
         receiptPanel.add(receiptCheckbox, BorderLayout.WEST);
         receiptPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));  // Allow full width
@@ -251,13 +251,17 @@ public class PaymentGUI extends JFrame {
                 JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
             } else {
                  // Print Receipt if the checkbox is selected
-                if (receiptCheckbox.isSelected()) {
+                    String couponCode = couponField.getText().trim();
+                    double discountMulti = pay.applyDiscount(couponCode);
                     pay.printReceipt(
                         CartManager.readCartItem(), // List of items in the cart
                         (String) payComboBox.getSelectedItem(), // Selected payment method
                         totalPrice, // Total price of the order
-                        fee // Takeout fee amount
+                        fee, // Takeout fee amount
+                        couponCode.isEmpty() ? null : couponCode, // The Entered CouponCode
+                        discountMulti // Discount multiplier
                     );
+                }
                 }
                 pay.saveDiscounts("Discount.txt");
                 WaitingGUI gui = new WaitingGUI(CartManager.getTotalCount());

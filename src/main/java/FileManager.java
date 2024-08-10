@@ -119,7 +119,7 @@ public class FileManager {
     }
 
     // Print the receipt
-    public void printReceipt(List<Item> cartItems, String paymentMethod, double totalPrice, double fee) {
+    public void printReceipt(List<Item> cartItems, String paymentMethod, double totalPrice, double fee, String Coupon, double discount) {
         // Generate a unique filename using the current timestamp
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filename = "Receipt_" + timestamp + ".txt";
@@ -139,7 +139,13 @@ public class FileManager {
                 writer.write("\nTakeout Fee: $" + String.format("%.2f", fee));
             }
 
-            writer.write("\nTotal: $" + String.format("%.2f", totalPrice));
+            // Write the coupon code and discount percentage if a coupon was applied
+            if (Coupon != null && discount < 1.0) {
+                double percentageOff = (1 - discount) * 100;
+                writer.write(String.format("\nCoupon Code: %s\nDiscount: %.0f%% off", Coupon, percentageOff));
+            }
+
+            writer.write("\n\nTotal: $" + String.format("%.2f", totalPrice));
             writer.write("\n\nThank you so much for Shopping here!");
 
             // Show confirmation message
