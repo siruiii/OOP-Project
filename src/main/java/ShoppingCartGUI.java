@@ -4,10 +4,14 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 public class ShoppingCartGUI extends JFrame {
+    private JScrollPane scrollPane;
     private JTextPane textPane;
     private JLabel lblTotalCount;
     private JLabel lblTotalPrice;
     private JLabel lblInstruction;
+    private JButton btnBack;
+    private JButton btnCheckout;
+    private JButton btnReset;
     private int hoverLine = -1;
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
@@ -30,18 +34,14 @@ public class ShoppingCartGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        // Back to Menu GUI
-        JButton btnBack = new JButton("Back to Menu");
+        btnBack = new JButton("Back to Menu");
         btnBack.setBounds(21, 2, 117, 29);
         btnBack.addActionListener(e -> {
-            menuGUI mgui = new menuGUI();
-            setVisible(false);
-            mgui.setVisible(true);
+            goBack();
         });
         getContentPane().add(btnBack);
 
-        // Go to PaymentGUI 
-        JButton btnCheckout = new JButton("Checkout");
+        btnCheckout = new JButton("Checkout");
         btnCheckout.setBounds(346, 237, 98, 29);
         btnCheckout.addActionListener(e -> {
             // Add logic to proceed to checkout
@@ -52,7 +52,7 @@ public class ShoppingCartGUI extends JFrame {
         });
         getContentPane().add(btnCheckout);
 
-        JScrollPane scrollPane = new JScrollPane();
+        scrollPane = new JScrollPane();
         scrollPane.setBounds(29, 40, 388, 170);
         getContentPane().add(scrollPane);
 
@@ -78,11 +78,10 @@ public class ShoppingCartGUI extends JFrame {
         lblTotalCount.setBounds(29, 242, 129, 16);
         getContentPane().add(lblTotalCount);
 
-        JButton btnReset = new JButton("Reset");
+        btnReset = new JButton("Reset");
         btnReset.setBounds(346, 2, 98, 29);
         btnReset.addActionListener(e -> {
-            CartManager.resetCart();
-            displayCart();
+            clickReset();
         });
         getContentPane().add(btnReset);
 
@@ -118,7 +117,8 @@ public class ShoppingCartGUI extends JFrame {
                             char index = selectedItem.charAt(0);
                             int i = Character.getNumericValue(index) - 1;
                             if (i >= 0 && i < CartManager.readCartItem().size()) {
-                                lblInstruction.setText("Double Click to Edit " + CartManager.readCartItem().get(i).getName());
+                                lblInstruction
+                                        .setText("Double Click to Edit " + CartManager.readCartItem().get(i).getName());
                                 found = true;
                             }
                         }
@@ -171,7 +171,8 @@ public class ShoppingCartGUI extends JFrame {
         if (CartManager.readCartItem().isEmpty()) {
             lblTotalCount.setText("Item Count: 0");
             lblTotalPrice.setText("Total Price: 0");
-            textPane.setText("\n\n                    ---Shopping Cart is empty now---\n\n                    ---Back to Menu to add items---");
+            textPane.setText(
+                    "\n\n                    ---Shopping Cart is empty now---\n\n                    ---Back to Menu to add items---");
         } else {
             for (int i = 0; i < CartManager.readCartItem().size(); i++) {
                 Item item = CartManager.readCartItem().get(i);
@@ -215,12 +216,26 @@ public class ShoppingCartGUI extends JFrame {
         for (int i = 0; i < numLines; i++) {
             Element lineElem = textPane.getDocument().getDefaultRootElement().getElement(i);
             if (i == clickedLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
             } else if (i == hoverLine) {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
             } else {
-                doc.setCharacterAttributes(lineElem.getStartOffset(), lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
             }
         }
+    }
+
+    private void clickReset() {
+        CartManager.resetCart();
+        displayCart();
+    }
+
+    private void goBack() {
+        menuGUI mgui = new menuGUI();
+        setVisible(false);
+        mgui.setVisible(true);
     }
 }
