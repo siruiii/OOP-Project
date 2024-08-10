@@ -1,7 +1,34 @@
-Coffee Latte,Drink,4.5,5.4,6.3,0.0,0
+Coffee Latte,Drink,4.5,5.4,6.3,24,5
 Drip Coffee,Drink,4,5,6,0.0,0
-Espresso,Drink,3.5,4.5,5.5,0.0,0
+Espresso,Drink,3.5,4.5,5.5,28,7
 Americano,Drink,4.5,5.4,6.3,0.0,0
-Flat White,Drink,4.5,5.5,6.4,0.0,0
+Flat White,Drink,4.5,5.5,6.4,56.4,12
+Cold Brew,Drink,4,5,6,0.0,0
+Iced Coffee,Drink,4.25,5.25,6.25,0.0,0
+Black Coffee,Drink,4.25,5.25,6.25,24,5
+Cappuccino,Drink,4.5,5.5,6.5,30.1,7
+Green Tea,Drink,4,5,6,0.0,0
+Earl Grey,Drink,4.5,5.5,6.5,43.45,11
+Rose Tea,Drink,5,6,7,0.0,0
+Chamomile Tea,Drink,4,5,6,30.1,7
+Coconut Water,Drink,4.5,5.5,6.5,0.0,0
+Orange Juice,Drink,3.75,4.75,5.75,46.75,11
+Apple Juice,Drink,3.75,4.75,5.75,0.0,0
+Sparkling Water,Drink,2.5,3.5,4.5,0.0,0
+Berry Smoothie,Drink,5.5,6.5,7.5,54,12
+Mango Smoothie,Drink,5.5,6.5,7.5,20,5
 Eggs & Toast,Food,12,16,19,0.0,0
-Ham & Cheese Croissant,Food,9,10,11,0.0,0
+Ham & Cheese Croissant,Food,9,10,11,48.3,10
+Avocado Toast,Food,15,18,21,0.0,0
+Pancakes,Food,8.5,10.5,12.5,27.3,7
+Smoothie Bowl,Food,12.5,14.5,16.5,0.0,0
+Burrito,Food,Food,9,12,13.5,50.4,12
+Hash Browns,Food,4,5.5,7,0.0,0
+Acai Bowl,Food,9,11.5,14,0.0,0
+Vegetable Frittata,Food,10,12.5,15,27.3,7
+Salmon Bagel,Food,12,15,18,20.5,5
+Bacon & Eggs,Food,10,12.5,15,0.0,0
+Cinnamon Roll,Food,6,7.5,9,17.2,4
+Muffin,Food,4,5.5,7,0.0,0
+Fruit Salad,Food,7,9,11,0.0,0
+Chia Pudding,Food,6.5,8.5,10.5,38,8
