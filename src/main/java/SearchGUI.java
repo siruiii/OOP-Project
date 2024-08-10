@@ -23,7 +23,7 @@ public class SearchGUI extends JFrame {
     private int hoverLine = -1;
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
-    private List<String> searchHistory = new ArrayList<>();
+    private static List<String> searchHistory = new ArrayList<>();
 
     public SearchGUI() {
         setTitle("Search Menu");
@@ -65,6 +65,7 @@ public class SearchGUI extends JFrame {
         cbxField = new JComboBox<>();
         cbxField.setBounds(92, 60, 215, 26);
         cbxField.setEditable(true);
+        updateSearchHistory();
         getContentPane().add(cbxField);
 
         btnEnter = new JButton("Enter");
