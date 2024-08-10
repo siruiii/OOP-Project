@@ -16,9 +16,9 @@ public class RatingGUI extends JFrame {
     private List<JComboBox<String>> ratingComboBoxes;
     private final FileManager file;
 
-
+    // Constructor
     public RatingGUI() {
-        file = new FileManager("itemfile.txt"); // Load items from file
+        file = new FileManager("itemfile.txt", false); // Load items from file
         cartItems = CartManager.readCartItem(); // Get items from the cart
         ratingComboBoxes = new ArrayList<>();
 
@@ -33,8 +33,8 @@ public class RatingGUI extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
 
         // Order complete label, centered and bold
-        JLabel orderCompleteLabel = new JLabel("Yay! The order is complete!");
-        orderCompleteLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        JLabel orderCompleteLabel = new JLabel("Yay! The Order is Complete!");
+        orderCompleteLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -45,12 +45,15 @@ public class RatingGUI extends JFrame {
         gbc.gridy++;
         panel.add(Box.createRigidArea(new Dimension(0, 5)), gbc);
 
+        Font subtitleFont = new Font("Arial", Font.BOLD, 14); 
+
         // Instruction label before the rating spinners
-        JLabel instructionLabel = new JLabel("Enjoying what you have? Please consider rating from 0 to 5 stars!");
+        JLabel instructLabel = new JLabel("Enjoying what you have? Consider rating from 0 to 5 stars!");
         gbc.gridy++;
         gbc.gridwidth = 3;
+        instructLabel.setFont(subtitleFont);
         gbc.anchor = GridBagConstraints.WEST;
-        panel.add(instructionLabel, gbc);
+        panel.add(instructLabel, gbc);
 
         // Adding each item and its rating spinner to the panel
         gbc.gridwidth = 1;
@@ -79,6 +82,7 @@ public class RatingGUI extends JFrame {
         gbc.gridx = 0;
         gbc.gridwidth = 3;
         JLabel feedbackLabel = new JLabel("Questions? Complaints? Feel free to comment below:");
+        feedbackLabel.setFont(subtitleFont);
         feedbackLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(feedbackLabel, gbc);
 
@@ -138,4 +142,11 @@ public class RatingGUI extends JFrame {
     public void showRate() {
         setVisible(true);
     }
+    
+    /* Debugger
+    public static void main(String[] args) {
+        RatingGUI gui = new RatingGUI();
+        gui.showRate(); // Show the payment window
+    }
+    */
 }

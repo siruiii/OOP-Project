@@ -39,13 +39,14 @@ public class CartManager {
         cart_items.add(item);
     }
 
-    public static void editItem(Item item, int quantity, String size) {
+    public static void editItem(int Index, int quantity, String size) {
         //edit a selected item
-        item.setQuantity(quantity);
-        item.setSize(size);
+        Item item = cart_items.get(Index);
+            item.setQuantity(quantity);
+            item.setSize(size);
     }
-    public static void deleteItem(Item item) {
-        cart_items.remove(item);
+    public static void deleteItem(int Index) {
+        cart_items.remove(Index);
     }
     public static void resetCart(){
         cart_items.clear();

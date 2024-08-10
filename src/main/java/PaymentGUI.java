@@ -5,7 +5,7 @@ import javax.swing.border.LineBorder;
 public class PaymentGUI extends JFrame {
     private final JPanel mainPanel;
     private JPanel discountPanel;
-    private final PayManager pay;
+    private final FileManager pay;
     private JTextArea totalPLb;
     private JTextField couponField;
     private JComboBox<String> payComboBox;
@@ -16,7 +16,7 @@ public class PaymentGUI extends JFrame {
 
     public PaymentGUI() {
         // Initialize PayManager
-        pay = new PayManager();
+        pay = new FileManager("itemfile.txt", true);
 
         // Set up UI components
         setTitle("Payment");
@@ -331,5 +331,10 @@ public class PaymentGUI extends JFrame {
     // Display Method
     public void showPay() {
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        PaymentGUI gui = new PaymentGUI();
+        gui.showPay(); // Show the payment window
     }
 }

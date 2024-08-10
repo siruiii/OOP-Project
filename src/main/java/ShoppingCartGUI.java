@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -9,6 +7,7 @@ public class ShoppingCartGUI extends JFrame {
     private JTextPane textPane;
     private JLabel lblTotalCount;
     private JLabel lblTotalPrice;
+    private JLabel lblInstruction;
     private int hoverLine = -1;
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
@@ -25,36 +24,31 @@ public class ShoppingCartGUI extends JFrame {
     }
 
     public ShoppingCartGUI() {
+        // GUI settings
         setTitle("Shopping Cart");
         setBounds(100, 100, 450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-
+        // Back to Menu GUI
         JButton btnBack = new JButton("Back to Menu");
         btnBack.setBounds(21, 2, 117, 29);
-        btnBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Add logic to proceed to checkout
-                menuGUI mgui = new menuGUI();
-                setVisible(false);
-                mgui.setVisible(true);
-            }
+        btnBack.addActionListener(e -> {
+            menuGUI mgui = new menuGUI();
+            setVisible(false);
+            mgui.setVisible(true);
         });
         getContentPane().add(btnBack);
 
+        // Go to PaymentGUI 
         JButton btnCheckout = new JButton("Checkout");
         btnCheckout.setBounds(346, 237, 98, 29);
-        btnCheckout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Add logic to proceed to checkout
-                System.out.println("Checkout button clicked");
-                PaymentGUI paymentGUI = new PaymentGUI();
-                setVisible(false);
-                paymentGUI.showPay();
-            }
+        btnCheckout.addActionListener(e -> {
+            // Add logic to proceed to checkout
+            System.out.println("Checkout button clicked");
+            PaymentGUI paymentGUI = new PaymentGUI();
+            setVisible(false);
+            paymentGUI.showPay();
         });
         getContentPane().add(btnCheckout);
 
@@ -76,9 +70,8 @@ public class ShoppingCartGUI extends JFrame {
 
         doc.setCharacterAttributes(0, doc.getLength(), normalStyle, true);
 
-
         lblTotalPrice = new JLabel("Total Price: N/A");
-        lblTotalPrice.setBounds(150, 242, 129, 16);
+        lblTotalPrice.setBounds(150, 242, 200, 16);
         getContentPane().add(lblTotalPrice);
 
         lblTotalCount = new JLabel("Item Count: N/A");
@@ -87,20 +80,17 @@ public class ShoppingCartGUI extends JFrame {
 
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(346, 2, 98, 29);
-        btnReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CartManager.resetCart();
-                displayCart();
-            }
+        btnReset.addActionListener(e -> {
+            CartManager.resetCart();
+            displayCart();
         });
         getContentPane().add(btnReset);
 
-        JLabel lblNewLabel_1 = new JLabel(" ");
-        lblNewLabel_1.setBounds(29, 210, 300, 16);
-        Font currentFont = lblNewLabel_1.getFont();
-        lblNewLabel_1.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
-        getContentPane().add(lblNewLabel_1);
+        lblInstruction = new JLabel(" ");
+        lblInstruction.setBounds(29, 210, 300, 16);
+        Font currentFont = lblInstruction.getFont();
+        lblInstruction.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
+        getContentPane().add(lblInstruction);
 
         displayCart();
 
@@ -123,18 +113,18 @@ public class ShoppingCartGUI extends JFrame {
                                                 .getStartOffset())
                                 .trim();
 
-                                boolean found = false;
-                                for (Item item : CartManager.readCartItem()) {
-                                    if (selectedItem.startsWith(item.getName())) {
-                                        lblNewLabel_1.setText("Double Click to Edit " + item.getName());
-                                        found = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!found) {
-                                    lblNewLabel_1.setText(" ");
-                                }
+                        boolean found = false;
+                        if (!selectedItem.isEmpty()) {
+                            char index = selectedItem.charAt(0);
+                            int i = Character.getNumericValue(index) - 1;
+                            if (i >= 0 && i < CartManager.readCartItem().size()) {
+                                lblInstruction.setText("Double Click to Edit " + CartManager.readCartItem().get(i).getName());
+                                found = true;
+                            }
+                        }
+                        if (!found) {
+                            lblInstruction.setText(" ");
+                        }
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -146,7 +136,6 @@ public class ShoppingCartGUI extends JFrame {
         textPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                EditItemGUI editCurrentLine = new EditItemGUI(null);
                 if (e.getClickCount() == 2) {
                     try {
                         int offset = textPane.viewToModel2D(e.getPoint());
@@ -158,15 +147,16 @@ public class ShoppingCartGUI extends JFrame {
                                                 .getStartOffset())
                                 .trim();
 
-                        for (Item item : CartManager.readCartItem()) {
-                            if (selectedItem.startsWith(item.getName())) {
-                                editCurrentLine.setItemDetails(item);
+                        if (!selectedItem.isEmpty()) {
+                            char index = selectedItem.charAt(0);
+                            int i = Character.getNumericValue(index) - 1;
+                            if (i >= 0 && i < CartManager.readCartItem().size()) {
+                                EditItemGUI editCurrentLine = new EditItemGUI(null);
+                                editCurrentLine.setItemDetails(i);
                                 setVisible(false);
                                 editCurrentLine.setVisible(true);
-                                break;
                             }
                         }
-
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -174,23 +164,28 @@ public class ShoppingCartGUI extends JFrame {
             }
         });
     }
-    private void displayCart(){
+
+    private void displayCart() {
         StringBuilder displayText = new StringBuilder();
-        if(CartManager.readCartItem().size()==0){
+
+        if (CartManager.readCartItem().isEmpty()) {
             lblTotalCount.setText("Item Count: 0");
             lblTotalPrice.setText("Total Price: 0");
             textPane.setText("\n\n                    ---Shopping Cart is empty now---\n\n                    ---Back to Menu to add items---");
-        }else{
-            for (Item item : CartManager.readCartItem()) {
-                double unitprice=0;
-                if(item.getSize() == "Small"){
-                    unitprice=item.getSmallPrice();
-                }else if(item.getSize() == "Medium"){
-                    unitprice=item.getMediumPrice();
-                }else if(item.getSize() == "Large"){
-                    unitprice=item.getLargePrice();
+        } else {
+            for (int i = 0; i < CartManager.readCartItem().size(); i++) {
+                Item item = CartManager.readCartItem().get(i);
+                double unitprice = 0;
+                if ("Small".equals(item.getSize())) {
+                    unitprice = item.getSmallPrice();
+                } else if ("Medium".equals(item.getSize())) {
+                    unitprice = item.getMediumPrice();
+                } else if ("Large".equals(item.getSize())) {
+                    unitprice = item.getLargePrice();
                 }
-                displayText.append(item.getName())
+                displayText.append(i + 1)
+                        .append(" - ")
+                        .append(item.getName())
                         .append(" - Size: ")
                         .append(item.getSize())
                         .append(" - Qty: ")
@@ -200,14 +195,16 @@ public class ShoppingCartGUI extends JFrame {
                         .append("\n");
             }
             textPane.setText(displayText.toString());
-            lblTotalCount.setText("Item Count: "+CartManager.getTotalCount());
-            lblTotalPrice.setText("Total Price: "+CartManager.getTotalPrice());
-        }  
+            lblTotalCount.setText("Item Count: " + CartManager.getTotalCount());
+            lblTotalPrice.setText("Total Price: " + CartManager.getTotalPrice());
+        }
     }
+
     private int getLineAtPosition(int pos) {
         try {
             return textPane.getDocument().getDefaultRootElement().getElementIndex(pos);
         } catch (Exception e) {
+            e.printStackTrace();
             return -1;
         }
     }

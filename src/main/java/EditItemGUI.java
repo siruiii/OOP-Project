@@ -22,7 +22,8 @@ public class EditItemGUI extends JFrame {
     private JCheckBox chckbxSmall, chckbxMedium, chckbxLarge;
     private double smallPrice, mediumPrice, largePrice;
     private JButton btnDelete;
-    private Item currentItem;
+    private int i;
+    private Item selectedItem;
 
     /**
      * Launch the application.
@@ -132,7 +133,7 @@ public class EditItemGUI extends JFrame {
         btnDelete = new JButton("Delete");
         btnDelete.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-                CartManager.deleteItem(currentItem);
+                CartManager.deleteItem(i);
                 setVisible(false);
                 ShoppingCartGUI cgui= new ShoppingCartGUI();
                 cgui.setVisible(true);
@@ -172,9 +173,7 @@ public class EditItemGUI extends JFrame {
                 // Validate selection and quantity
                 if (selectedSize != null && quantity > 0) {
 
-                    CartManager.editItem(currentItem,quantity,selectedSize);
-                    // System.out.println(newItem.getSize()+" is added to cart");
-                    // System.out.println(CartManager.getTotalCount());
+                    CartManager.editItem(i,quantity,selectedSize);
                     JOptionPane.showMessageDialog(null,
                             "Saved: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
                             JOptionPane.INFORMATION_MESSAGE);
@@ -190,8 +189,9 @@ public class EditItemGUI extends JFrame {
         });
     }
 
-    public void setItemDetails(Item selectedItem) {
-        currentItem = selectedItem;
+    public void setItemDetails(int index) {
+        i=index;
+        selectedItem=CartManager.readCartItem().get(i);
         this.itemName = selectedItem.getName();
         this.category = selectedItem.getCategory();
         this.smallPrice = selectedItem.getSmallPrice();
