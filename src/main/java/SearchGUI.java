@@ -9,7 +9,7 @@ import javax.swing.text.*;
 
 public class SearchGUI extends JFrame {
 
-    private JComboBox<String> comboBox;
+    private JComboBox<String> cbxField;
     private JTextPane textPane;
     private JLabel lblSearch;
     private JButton btnBack;
@@ -25,25 +25,12 @@ public class SearchGUI extends JFrame {
     private Style normalStyle, hoverStyle, clickedStyle;
     private List<String> searchHistory = new ArrayList<>();
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                SearchGUI window = new SearchGUI();
-                window.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
     public SearchGUI() {
-        // GUI settings
         setTitle("Search Menu");
         setBounds(100, 100, 450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        // Setup pane
         lblSearch = new JLabel("Search");
         lblSearch.setBounds(29, 65, 61, 16);
         getContentPane().add(lblSearch);
@@ -75,10 +62,10 @@ public class SearchGUI extends JFrame {
         cbxRating.addItem("Rating >1★ ");
         getContentPane().add(cbxRating);
 
-        comboBox = new JComboBox<>();
-        comboBox.setBounds(92, 60, 215, 26);
-        comboBox.setEditable(true);
-        getContentPane().add(comboBox);
+        cbxField = new JComboBox<>();
+        cbxField.setBounds(92, 60, 215, 26);
+        cbxField.setEditable(true);
+        getContentPane().add(cbxField);
 
         btnEnter = new JButton("Enter");
         btnEnter.setBounds(319, 60, 98, 29);
@@ -119,7 +106,7 @@ public class SearchGUI extends JFrame {
         // Filter
         // Click to show search result with/without filter
         btnEnter.addActionListener(e -> {
-            performSearchAndFilter(items);
+            clickEnter(items);
         });
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
@@ -195,15 +182,15 @@ public class SearchGUI extends JFrame {
         });
     }
 
-    private void updateComboBoxHistory() {
-        comboBox.removeAllItems();
+    private void updateSearchHistory() {
+        cbxField.removeAllItems();
         // Reverse the order of search history
         List<String> reversedHistory = new ArrayList<>(searchHistory);
         Collections.reverse(reversedHistory);
 
         // Add items in reversed order
         for (String historyItem : reversedHistory) {
-            comboBox.addItem(historyItem);
+            cbxField.addItem(historyItem);
         }
     }
 
@@ -302,15 +289,16 @@ public class SearchGUI extends JFrame {
         setVisible(false);
         mgui.setVisible(true);
     }
-    private void performSearchAndFilter(List<Item> items){
-        String input = (String) comboBox.getSelectedItem();
+
+    private void clickEnter(List<Item> items){
+        String input = (String) cbxField.getSelectedItem();
         List<Item> result = new ArrayList<>();
 
         if (input != null && !input.trim().isEmpty()) {
             // Store the search history
             if (!searchHistory.contains(input)) {
                 searchHistory.add(input);
-                updateComboBoxHistory();
+                updateSearchHistory();
             }
 
             result = searchByName(items, input);
