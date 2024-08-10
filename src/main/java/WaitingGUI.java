@@ -121,6 +121,5 @@ public class WaitingGUI extends JFrame {
         // Create an instance of the WaitingGUI with a sample quantity
         WaitingGUI gui = new WaitingGUI(1);
         gui.showWait();
-    }
-    */
+    }*/
 }

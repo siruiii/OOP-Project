@@ -337,8 +337,9 @@ public class PaymentGUI extends JFrame {
         setVisible(true);
     }
 
+     /*Debugger
     public static void main(String[] args) {
         PaymentGUI gui = new PaymentGUI();
         gui.showPay(); // Show the payment window
-    }
+    }*/
 }
