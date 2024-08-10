@@ -16,19 +16,8 @@ public class ShoppingCartGUI extends JFrame {
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                ShoppingCartGUI window = new ShoppingCartGUI();
-                window.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 
     public ShoppingCartGUI() {
-        // GUI settings
         setTitle("Shopping Cart");
         setBounds(100, 100, 450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

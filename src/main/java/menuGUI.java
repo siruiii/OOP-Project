@@ -85,7 +85,7 @@ public class menuGUI extends JFrame {
         });
 
         lblinstruction = new JLabel(" ");
-        lblinstruction.setBounds(29, 210, 250, 16);
+        lblinstruction.setBounds(29, 210, 300, 16);
         Font currentFont = lblinstruction.getFont();
         lblinstruction.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
         getContentPane().add(lblinstruction);

@@ -24,26 +24,12 @@ public class EditItemGUI extends JFrame {
     private JButton btnDelete;
     private int i;
     private Item selectedItem;
+    private JLabel lblItem;
+    private JLabel lblSize;
+    private JButton btnSave;
+    private JLabel lblQuantity;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                  EditItemGUI frame = new EditItemGUI(null);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
-    /**
-     * Create the frame.
-     */
     public EditItemGUI(menuGUI menuFrame) {
         this.menuFrame = menuFrame;
         setTitle("Edit item");
@@ -55,24 +41,22 @@ public class EditItemGUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("Item: ");
-        lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-        lblNewLabel.setBounds(84, 47, 300, 16);
-        contentPane.add(lblNewLabel);
+        lblItem = new JLabel("Item: ");
+        lblItem.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+        lblItem.setBounds(84, 47, 300, 16);
+        contentPane.add(lblItem);
 
         btnBack = new JButton("Back to Cart");
         btnBack.setBounds(21, 2, 117, 29);
         btnBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                ShoppingCartGUI cgui= new ShoppingCartGUI();
-                cgui.setVisible(true);
+                goBack();
             }
         });
         getContentPane().add(btnBack);
 
-        JLabel lblSize = new JLabel("Size:");
+        lblSize = new JLabel("Size:");
         lblSize.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
         lblSize.setBounds(84, 92, 61, 16);
         contentPane.add(lblSize);
@@ -116,11 +100,11 @@ public class EditItemGUI extends JFrame {
             }
         });
 
-        JButton btnSave = new JButton("Save Change");
+        btnSave = new JButton("Save Change");
         btnSave.setBounds(315, 226, 117, 29);
         contentPane.add(btnSave);
 
-        JLabel lblQuantity = new JLabel("Quantity:");
+        lblQuantity = new JLabel("Quantity:");
         lblQuantity.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
         lblQuantity.setBounds(84, 186, 87, 16);
         contentPane.add(lblQuantity);
@@ -133,10 +117,7 @@ public class EditItemGUI extends JFrame {
         btnDelete = new JButton("Delete");
         btnDelete.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-                CartManager.deleteItem(i);
-                setVisible(false);
-                ShoppingCartGUI cgui= new ShoppingCartGUI();
-                cgui.setVisible(true);
+            clickDelete();
           }
         });
         btnDelete.setBounds(186, 226, 117, 29);
@@ -145,46 +126,7 @@ public class EditItemGUI extends JFrame {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedSize = null;
-                double price = 0.0; // Price based on the selected size
-
-                // Determine the selected size and its price
-                if (chckbxSmall.isSelected()) {
-                    selectedSize = "Small";
-                    price = smallPrice;
-                } else if (chckbxMedium.isSelected()) {
-                    selectedSize = "Medium";
-                    price = mediumPrice;
-                } else if (chckbxLarge.isSelected()) {
-                    selectedSize = "Large";
-                    price = largePrice;
-                }
-
-                // Parse the quantity
-                int quantity = 0;
-                try {
-                    quantity = Integer.parseInt(textField.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Please enter a valid quantity.", "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                // Validate selection and quantity
-                if (selectedSize != null && quantity > 0) {
-
-                    CartManager.editItem(i,quantity,selectedSize);
-                    JOptionPane.showMessageDialog(null,
-                            "Saved: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    setVisible(false);
-                    ShoppingCartGUI cgui= new ShoppingCartGUI();
-                cgui.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please select a size and enter a valid quantity.",
-                            "Incomplete Selection", JOptionPane.WARNING_MESSAGE);
-                }
+                clickSave();
             }
         });
     }
@@ -218,5 +160,61 @@ public class EditItemGUI extends JFrame {
         chckbxLarge.setSelected(true);
         }
         textField.setText(selectedItem.getQuantity()+ "");
+    }
+    private void goBack(){
+        setVisible(false);
+                ShoppingCartGUI cgui= new ShoppingCartGUI();
+                cgui.setVisible(true);
+    }
+    private void showCart(){
+        setVisible(false);
+        ShoppingCartGUI cgui= new ShoppingCartGUI();
+        cgui.setVisible(true);
+    }
+    private void clickDelete(){
+        CartManager.deleteItem(i);
+        setVisible(false);
+        ShoppingCartGUI cgui= new ShoppingCartGUI();
+        cgui.setVisible(true);
+    }
+    private void clickSave(){
+        String selectedSize = null;
+        double price = 0.0; // Price based on the selected size
+
+        // Determine the selected size and its price
+        if (chckbxSmall.isSelected()) {
+            selectedSize = "Small";
+            price = smallPrice;
+        } else if (chckbxMedium.isSelected()) {
+            selectedSize = "Medium";
+            price = mediumPrice;
+        } else if (chckbxLarge.isSelected()) {
+            selectedSize = "Large";
+            price = largePrice;
+        }
+
+        // Parse the quantity
+        int quantity = 0;
+        try {
+            quantity = Integer.parseInt(textField.getText());
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid quantity.", "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validate selection and quantity
+        if (selectedSize != null && quantity > 0) {
+
+            CartManager.editItem(i,quantity,selectedSize);
+            JOptionPane.showMessageDialog(null,
+                    "Saved: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            showCart();
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a size and enter a valid quantity.",
+                    "Incomplete Selection", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }
