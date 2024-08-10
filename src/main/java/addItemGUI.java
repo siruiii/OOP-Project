@@ -21,6 +21,10 @@ public class addItemGUI extends JFrame {
     private menuGUI menuFrame;
     private JCheckBox chckbxSmall, chckbxMedium, chckbxLarge;
     private double smallPrice, mediumPrice, largePrice;
+    private JLabel lblItem;
+    private JLabel lblSize;
+    private JButton btnAdd;
+    private JLabel lblQuantity;
 
     /**
      * Launch the application.
@@ -52,28 +56,22 @@ public class addItemGUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("Item: ");
-        lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-        lblNewLabel.setBounds(74, 47, 300, 16);
-        contentPane.add(lblNewLabel);
+        lblItem = new JLabel("Item: ");
+        lblItem.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+        lblItem.setBounds(74, 47, 300, 16);
+        contentPane.add(lblItem);
 
         btnBack = new JButton("Back");
         btnBack.setBounds(21, 2, 117, 29);
         btnBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                if (btnBack.getText()=="Back to Menu"){
-                    menuFrame.showMenu();
-                }else if(btnBack.getText()=="Back to Search"){
-                    SearchGUI sgui = new SearchGUI();
-                    sgui.setVisible(true);
-                }
+                goBack();
             }
         });
         getContentPane().add(btnBack);
 
-        JLabel lblSize = new JLabel("Size:");
+        lblSize = new JLabel("Size:");
         lblSize.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
         lblSize.setBounds(84, 87, 61, 16);
         contentPane.add(lblSize);
@@ -117,11 +115,11 @@ public class addItemGUI extends JFrame {
             }
         });
 
-        JButton btnNewButton_1 = new JButton("Add to Cart");
-        btnNewButton_1.setBounds(167, 206, 117, 29);
-        contentPane.add(btnNewButton_1);
+        btnAdd = new JButton("Add to Cart");
+        btnAdd.setBounds(167, 206, 117, 29);
+        contentPane.add(btnAdd);
 
-        JLabel lblQuantity = new JLabel("Quantity:");
+        lblQuantity = new JLabel("Quantity:");
         lblQuantity.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
         lblQuantity.setBounds(81, 162, 87, 16);
         contentPane.add(lblQuantity);
@@ -131,7 +129,7 @@ public class addItemGUI extends JFrame {
         contentPane.add(textField);
         textField.setColumns(10);
 
-        btnNewButton_1.addActionListener(new ActionListener() {
+        btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addItemToCart();
@@ -211,5 +209,15 @@ public class addItemGUI extends JFrame {
     }
     public void setBtnBack(String btnText){
         btnBack.setText(btnText);
+    }
+
+    private void goBack(){
+        setVisible(false);
+        if (btnBack.getText()=="Back to Menu"){
+                    menuFrame.showMenu();
+        }else if(btnBack.getText()=="Back to Search"){
+                    SearchGUI sgui = new SearchGUI();
+                    sgui.setVisible(true);
+        }
     }
 }

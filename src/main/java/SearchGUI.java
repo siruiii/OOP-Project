@@ -18,6 +18,7 @@ public class SearchGUI extends JFrame {
     private JComboBox<String> cbxCategory;
     private JComboBox<String> cbxRating;
     private JButton btnEnter;
+    private JScrollPane scrollPane;
 
     private int hoverLine = -1;
     private int clickedLine = -1;
@@ -50,7 +51,7 @@ public class SearchGUI extends JFrame {
         textPane = new JTextPane();
         textPane.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(textPane);
+        scrollPane = new JScrollPane(textPane);
         scrollPane.setBounds(29, 95, 388, 150);
         getContentPane().add(scrollPane);
 
@@ -88,9 +89,7 @@ public class SearchGUI extends JFrame {
         btnBack.setBounds(6, 2, 117, 29);
         getContentPane().add(btnBack);
         btnBack.addActionListener(e -> {
-            menuGUI mgui = new menuGUI();
-            setVisible(false);
-            mgui.setVisible(true);
+            goBack();
         });
 
         // Show instruction to add item
@@ -120,80 +119,7 @@ public class SearchGUI extends JFrame {
         // Filter
         // Click to show search result with/without filter
         btnEnter.addActionListener(e -> {
-            // Get the text from the comboBox
-            String input = (String) comboBox.getSelectedItem();
-
-            List<Item> result = new ArrayList<>();
-
-            if (input != null && !input.trim().isEmpty()) {
-                // Store the search history
-                if (!searchHistory.contains(input)) {
-                    searchHistory.add(input);
-                    updateComboBoxHistory();
-                }
-
-                result = searchByName(items, input);
-
-                if (chckbxFilter.isSelected()) {
-                    // Apply category filter
-                    String selectedCategory = (String) cbxCategory.getSelectedItem();
-                    if ("Food ONLY".equals(selectedCategory)) {
-                        selectedCategory = "Food";
-                    } else if ("Drink ONLY".equals(selectedCategory)) {
-                        selectedCategory = "Drink";
-                    } else {
-                        selectedCategory = "0";
-                    }
-
-                    String selectedRating = (String) cbxRating.getSelectedItem();
-                    if ("Rating >4★ ".equals(selectedRating)) {
-                        selectedRating = "4";
-                    } else if ("Rating >3★ ".equals(selectedRating)) {
-                        selectedRating = "3";
-                    } else if ("Rating >2★ ".equals(selectedRating)) {
-                        selectedRating = "2";
-                    } else if ("Rating >1★ ".equals(selectedRating)) {
-                        selectedRating = "1";
-                    } else {
-                        selectedRating = "0";
-                    }
-
-                    result = filter(result, selectedCategory, selectedRating);
-                }
-            } else {
-                // If input is empty, display all items
-                result = new ArrayList<>(items);
-
-                if (chckbxFilter.isSelected()) {
-                    // Apply filters even if no search term is provided
-                    String selectedCategory = (String) cbxCategory.getSelectedItem();
-                    if ("Food ONLY".equals(selectedCategory)) {
-                        selectedCategory = "Food";
-                    } else if ("Drink ONLY".equals(selectedCategory)) {
-                        selectedCategory = "Drink";
-                    } else {
-                        selectedCategory = "0";
-                    }
-
-                    String selectedRating = (String) cbxRating.getSelectedItem();
-                    if ("Rating >4★ ".equals(selectedRating)) {
-                        selectedRating = "4";
-                    } else if ("Rating >3★ ".equals(selectedRating)) {
-                        selectedRating = "3";
-                    } else if ("Rating >2★ ".equals(selectedRating)) {
-                        selectedRating = "2";
-                    } else if ("Rating >1★ ".equals(selectedRating)) {
-                        selectedRating = "1";
-                    } else {
-                        selectedRating = "0";
-                    }
-
-                    result = filter(result, selectedCategory, selectedRating);
-                }
-            }
-
-            // Display the result list
-            display(result);
+            performSearchAndFilter(items);
         });
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
@@ -369,5 +295,85 @@ public class SearchGUI extends JFrame {
                         lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
             }
         }
+    }
+
+    private void goBack(){
+        menuGUI mgui = new menuGUI();
+        setVisible(false);
+        mgui.setVisible(true);
+    }
+    private void performSearchAndFilter(List<Item> items){
+        String input = (String) comboBox.getSelectedItem();
+        List<Item> result = new ArrayList<>();
+
+        if (input != null && !input.trim().isEmpty()) {
+            // Store the search history
+            if (!searchHistory.contains(input)) {
+                searchHistory.add(input);
+                updateComboBoxHistory();
+            }
+
+            result = searchByName(items, input);
+
+            if (chckbxFilter.isSelected()) {
+                // Apply category filter
+                String selectedCategory = (String) cbxCategory.getSelectedItem();
+                if ("Food ONLY".equals(selectedCategory)) {
+                    selectedCategory = "Food";
+                } else if ("Drink ONLY".equals(selectedCategory)) {
+                    selectedCategory = "Drink";
+                } else {
+                    selectedCategory = "0";
+                }
+
+                String selectedRating = (String) cbxRating.getSelectedItem();
+                if ("Rating >4★ ".equals(selectedRating)) {
+                    selectedRating = "4";
+                } else if ("Rating >3★ ".equals(selectedRating)) {
+                    selectedRating = "3";
+                } else if ("Rating >2★ ".equals(selectedRating)) {
+                    selectedRating = "2";
+                } else if ("Rating >1★ ".equals(selectedRating)) {
+                    selectedRating = "1";
+                } else {
+                    selectedRating = "0";
+                }
+
+                result = filter(result, selectedCategory, selectedRating);
+            }
+        } else {
+            // If input is empty, display all items
+            result = new ArrayList<>(items);
+
+            if (chckbxFilter.isSelected()) {
+                // Apply filters even if no search term is provided
+                String selectedCategory = (String) cbxCategory.getSelectedItem();
+                if ("Food ONLY".equals(selectedCategory)) {
+                    selectedCategory = "Food";
+                } else if ("Drink ONLY".equals(selectedCategory)) {
+                    selectedCategory = "Drink";
+                } else {
+                    selectedCategory = "0";
+                }
+
+                String selectedRating = (String) cbxRating.getSelectedItem();
+                if ("Rating >4★ ".equals(selectedRating)) {
+                    selectedRating = "4";
+                } else if ("Rating >3★ ".equals(selectedRating)) {
+                    selectedRating = "3";
+                } else if ("Rating >2★ ".equals(selectedRating)) {
+                    selectedRating = "2";
+                } else if ("Rating >1★ ".equals(selectedRating)) {
+                    selectedRating = "1";
+                } else {
+                    selectedRating = "0";
+                }
+
+                result = filter(result, selectedCategory, selectedRating);
+            }
+        }
+
+        // Display the result list
+        display(result);
     }
 }

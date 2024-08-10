@@ -1,12 +1,11 @@
 import java.awt.EventQueue;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.text.*;
 
 public class menuGUI extends JFrame {
 
@@ -14,6 +13,14 @@ public class menuGUI extends JFrame {
     private addItemGUI addItemFrame;
     private List<Item> items;
     private JTextPane textPane;
+    private JButton btnSearch;
+    private JButton btnCart;
+    private JScrollPane scrollPane;
+
+    private JLabel lblinstruction;
+    private int hoverLine = -1;
+    private int clickedLine = -1;
+    private Style normalStyle, hoverStyle, clickedStyle;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -37,36 +44,30 @@ public class menuGUI extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JButton btnNewButton = new JButton("Search");
-        btnNewButton.setBounds(16, 6, 117, 29);
-        contentPane.add(btnNewButton);
-        btnNewButton.addActionListener(new ActionListener() {
+        btnSearch = new JButton("Search");
+        btnSearch.setBounds(16, 6, 117, 29);
+        contentPane.add(btnSearch);
+        btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SearchGUI sgui = new SearchGUI();
-                setVisible(false);
-                sgui.setVisible(true);
+                goToSearch();
             }
         });
 
-
-        JButton btnNewButton_1 = new JButton("Cart");
-        btnNewButton_1.setBounds(16, 237, 117, 29);
-        contentPane.add(btnNewButton_1);
-        btnNewButton_1.addActionListener(new ActionListener() {
+        btnCart = new JButton("View Shopping Cart");
+        btnCart.setBounds(16, 237, 200, 29);
+        contentPane.add(btnCart);
+        btnCart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShoppingCartGUI cgui = new ShoppingCartGUI();
-                setVisible(false);
-                cgui.setVisible(true);
+                viewCart();
             }
         });
 
         textPane = new JTextPane();
         textPane.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(textPane);
-        scrollPane.setBounds(83, 47, 294, 179);
+        scrollPane = new JScrollPane(textPane);
+        scrollPane.setBounds(29, 47, 388, 160);
         contentPane.add(scrollPane);
-
 
         addItemFrame = new addItemGUI(this);
 
@@ -82,6 +83,90 @@ public class menuGUI extends JFrame {
                 }
             }
         });
+
+        lblinstruction = new JLabel(" ");
+        lblinstruction.setBounds(29, 210, 250, 16);
+        Font currentFont = lblinstruction.getFont();
+        lblinstruction.setFont(new Font(currentFont.getFamily(), currentFont.getStyle(), 12));
+        getContentPane().add(lblinstruction);
+
+        StyledDocument doc = textPane.getStyledDocument();
+        normalStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+        StyleConstants.setBackground(normalStyle, Color.WHITE);
+
+        hoverStyle = doc.addStyle("hoverStyle", null);
+        StyleConstants.setBackground(hoverStyle, Color.LIGHT_GRAY);
+
+        clickedStyle = doc.addStyle("clickedStyle", null);
+        StyleConstants.setBackground(clickedStyle, Color.YELLOW);
+
+        doc.setCharacterAttributes(0, doc.getLength(), normalStyle, true);
+
+        textPane.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int pos = textPane.viewToModel2D(e.getPoint());
+                int line = getLineAtPosition(pos);
+
+                if (line != hoverLine) {
+                    hoverLine = line;
+                    updateTextPaneStyles();
+                    try {
+                        int offset = textPane.viewToModel2D(e.getPoint());
+                        int rowStart = textPane.getDocument().getDefaultRootElement().getElementIndex(offset);
+                        String selectedItem = textPane.getDocument().getText(
+                                textPane.getDocument().getDefaultRootElement().getElement(rowStart).getStartOffset(),
+                                textPane.getDocument().getDefaultRootElement().getElement(rowStart).getEndOffset() -
+                                        textPane.getDocument().getDefaultRootElement().getElement(rowStart)
+                                                .getStartOffset())
+                                .trim();
+
+                        boolean found = false;
+                        for (Item item : items) {
+                            if (selectedItem.startsWith(item.getName())) {
+                                lblinstruction.setText("Double Click to Add " + item.getName());
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            lblinstruction.setText(" ");
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
+    }
+
+    private int getLineAtPosition(int pos) {
+        try {
+            return textPane.getDocument().getDefaultRootElement().getElementIndex(pos);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private void updateTextPaneStyles() {
+        StyledDocument doc = textPane.getStyledDocument();
+        int numLines = textPane.getDocument().getDefaultRootElement().getElementCount();
+        for (int i = 0; i < numLines; i++) {
+            Element lineElem = textPane.getDocument().getDefaultRootElement().getElement(i);
+            if (i == clickedLine) {
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), clickedStyle, false);
+            } else if (i == hoverLine) {
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), hoverStyle, false);
+            } else {
+                doc.setCharacterAttributes(lineElem.getStartOffset(),
+                        lineElem.getEndOffset() - lineElem.getStartOffset(), normalStyle, false);
+            }
+        }
     }
 
     private void showItems() {
@@ -121,6 +206,18 @@ public class menuGUI extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void goToSearch(){
+        SearchGUI sgui = new SearchGUI();
+        setVisible(false);
+        sgui.setVisible(true);
+    }
+
+    private void viewCart(){
+        ShoppingCartGUI cgui = new ShoppingCartGUI();
+        setVisible(false);
+        cgui.setVisible(true);
     }
 
     public void showMenu() {
