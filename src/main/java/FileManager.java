@@ -10,6 +10,11 @@ public class FileManager {
     private Discount hasDiscount;
 
     // Constructor
+    public FileManager(String fileName) {
+        items = new ArrayList<>();
+        readFile(fileName);
+    }
+    
     public FileManager(String fileName, boolean useDiscount) {
         items = new ArrayList<>();
         readFile(fileName);
