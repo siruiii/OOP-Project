@@ -140,7 +140,7 @@ public class FileManager {
             }
 
             writer.write("\nTotal: $" + String.format("%.2f", totalPrice));
-            writer.write("\nThank you so much for Shopping here!");
+            writer.write("\n\nThank you so much for Shopping here!");
 
             // Show confirmation message
             JOptionPane.showMessageDialog(null, "The receipt has been printed!", "Receipt ", JOptionPane.INFORMATION_MESSAGE);
@@ -148,6 +148,15 @@ public class FileManager {
             // Show error message if saving fails
             JOptionPane.showMessageDialog(null, "Error saving receipt.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // Save Feedback to a new file
+    public void writeFeedback(String feedback) {
+        try (BufferedWriter feedbackWriter = new BufferedWriter(new FileWriter("Feedback.txt", true))) {
+            if (feedback != null && !feedback.trim().isEmpty()) {
+                feedbackWriter.write(feedback.trim() + "\n\n");
+            }
+        } catch (IOException e) {}
     }
 
 }

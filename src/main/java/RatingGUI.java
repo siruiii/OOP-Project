@@ -1,20 +1,19 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.*;
 
 public class RatingGUI extends JFrame {
+    private final List<Item> cartItems;
+    private final FileManager file;
     private final JPanel panel;
     private final JButton finishButton;
-    private final List<Item> cartItems;
     private JTextArea feedbackTextArea;
     private List<JComboBox<String>> ratingComboBoxes;
-    private final FileManager file;
 
     // Constructor
     public RatingGUI() {
@@ -57,24 +56,30 @@ public class RatingGUI extends JFrame {
 
         // Adding each item and its rating spinner to the panel
         gbc.gridwidth = 1;
+        Set<String> addedItems = new HashSet<>(); // Set to track added item names
         for (Item item : cartItems) {
-            gbc.gridy++;
-            gbc.gridx = 0;
+            if (!addedItems.contains(item.getName())) {
+                gbc.gridy++;
+                gbc.gridx = 0;
 
-            JLabel itemLabel = new JLabel(item.getName());
-            panel.add(itemLabel, gbc);
+                JLabel itemLabel = new JLabel(item.getName());
+                panel.add(itemLabel, gbc);
 
-            gbc.gridx = 1;
-            String[] ratings = {"", "0", "1", "2", "3", "4", "5"};
-            JComboBox<String> ratingComboBox = new JComboBox<>(ratings);
-            ratingComboBox.setPreferredSize(new Dimension(100, 25));
-            ratingComboBoxes.add(ratingComboBox);
-            panel.add(ratingComboBox, gbc);
+                gbc.gridx = 1;
+                String[] ratings = {"", "0", "1", "2", "3", "4", "5"};
+                JComboBox<String> ratingComboBox = new JComboBox<>(ratings);
+                ratingComboBox.setPreferredSize(new Dimension(100, 25));
+                ratingComboBoxes.add(ratingComboBox);
+                panel.add(ratingComboBox, gbc);
 
-            gbc.gridx = 2;
-            JLabel starLabel = new JLabel("★");
-            starLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-            panel.add(starLabel, gbc);
+                gbc.gridx = 2;
+                JLabel starLabel = new JLabel("★");
+                starLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+                panel.add(starLabel, gbc);
+
+                // Add the item name to the set to avoid duplicates
+                addedItems.add(item.getName());
+            }
         }
 
         // Feedback label, aligned to the left
@@ -105,7 +110,13 @@ public class RatingGUI extends JFrame {
         finishButton.addActionListener(new FinishButtonListener());
         panel.add(finishButton, gbc);
 
-        add(panel);
+        // Wrap the panel in a JScrollPane
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Add the scrollPane to the frame instead of the panel
+        add(scrollPane);
     }
 
     // Listener for the Finish button
@@ -125,28 +136,23 @@ public class RatingGUI extends JFrame {
             // Save updated items back to menuitem.txt
             file.saveItems("itemfile.txt");
 
-            // Write feedback to Feedback.txt
-            try (BufferedWriter feedbackWriter = new BufferedWriter(new FileWriter("Feedback.txt", true))) {
-                String feedback = feedbackTextArea.getText().trim();
-                if (!feedback.isEmpty()) {
-                    feedbackWriter.write(feedback + "\n\n");
-                }
-            } catch (IOException ioException) {}
+            // Write feedback using FileManager
+            file.writeFeedback(feedbackTextArea.getText().trim());
 
             // Show thank you message in a pop-up box
             JOptionPane.showMessageDialog(panel, "Thank you so much! Bye for Now!", "Message", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // Close the GUI
+
+            dispose();
         }
     }
 
     public void showRate() {
         setVisible(true);
     }
-    
+
     /* Debugger
     public static void main(String[] args) {
         RatingGUI gui = new RatingGUI();
         gui.showRate(); // Show the payment window
-    }
-    */
+    } */
 }
