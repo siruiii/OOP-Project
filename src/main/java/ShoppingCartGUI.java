@@ -45,10 +45,7 @@ public class ShoppingCartGUI extends JFrame {
         btnCheckout.setBounds(346, 237, 98, 29);
         btnCheckout.addActionListener(e -> {
             // Add logic to proceed to checkout
-            System.out.println("Checkout button clicked");
-            PaymentGUI paymentGUI = new PaymentGUI();
-            setVisible(false);
-            paymentGUI.showPay();
+            clickCheckout();
         });
         getContentPane().add(btnCheckout);
 
@@ -151,10 +148,7 @@ public class ShoppingCartGUI extends JFrame {
                             char index = selectedItem.charAt(0);
                             int i = Character.getNumericValue(index) - 1;
                             if (i >= 0 && i < CartManager.readCartItem().size()) {
-                                EditItemGUI editCurrentLine = new EditItemGUI(null);
-                                editCurrentLine.setItemDetails(i);
-                                setVisible(false);
-                                editCurrentLine.setVisible(true);
+                                showEdit(i);
                             }
                         }
                     } catch (Exception ex) {
@@ -231,6 +225,20 @@ public class ShoppingCartGUI extends JFrame {
     private void clickReset() {
         CartManager.resetCart();
         displayCart();
+    }
+
+    private void clickCheckout(){
+        System.out.println("Checkout button clicked");
+            PaymentGUI paymentGUI = new PaymentGUI();
+            setVisible(false);
+            paymentGUI.showPay();
+    }
+
+    private void showEdit(int i){
+        EditItemGUI editCurrentLine = new EditItemGUI(null);
+        editCurrentLine.setItemDetails(i);
+        setVisible(false);
+        editCurrentLine.setVisible(true);
     }
 
     private void goBack() {
