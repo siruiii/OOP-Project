@@ -19,6 +19,7 @@ public class SearchGUI extends JFrame {
     private JComboBox<String> cbxRating;
     private JButton btnEnter;
     private JScrollPane scrollPane;
+    private List<Item> items;
 
     private int hoverLine = -1;
     private int clickedLine = -1;
@@ -102,13 +103,13 @@ public class SearchGUI extends JFrame {
 
         // Read menu
         FileManager fileManager = new FileManager("itemfile.txt");
-        List<Item> items = fileManager.getItems();
+        items = fileManager.getItems();
 
         // Filter
         // Click to show search result with/without filter
         btnEnter.addActionListener(e -> {
             String input = (String) cbxField.getSelectedItem();
-            clickEnter(items, input);
+            clickEnter(input);
         });
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
@@ -292,7 +293,7 @@ public class SearchGUI extends JFrame {
         mgui.setVisible(true);
     }
 
-    private void clickEnter(List<Item> items, String input) {
+    private void clickEnter(String input) {
         List<Item> result = new ArrayList<Item>();
 
         if (input != null && !input.trim().isEmpty()) {
