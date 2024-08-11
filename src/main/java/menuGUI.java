@@ -196,7 +196,7 @@ public class menuGUI extends JFrame {
     }
 
     private void goToSearch(){
-        SearchGUI sgui = new SearchGUI();
+        SearchGUI sgui = new SearchGUI(items);
         setVisible(false);
         sgui.setVisible(true);
     }
