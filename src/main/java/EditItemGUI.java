@@ -126,7 +126,7 @@ public class EditItemGUI extends JFrame {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                clickSave();
+                clickSave(null,0);
             }
         });
     }
@@ -177,11 +177,9 @@ public class EditItemGUI extends JFrame {
         ShoppingCartGUI cgui= new ShoppingCartGUI();
         cgui.setVisible(true);
     }
-    private void clickSave(){
-        String selectedSize = null;
-        double price = 0.0; // Price based on the selected size
+    private void clickSave(String selectedSize, int quantity){
+        double price = 0.0; 
 
-        // Determine the selected size and its price
         if (chckbxSmall.isSelected()) {
             selectedSize = "Small";
             price = smallPrice;
@@ -193,8 +191,6 @@ public class EditItemGUI extends JFrame {
             price = largePrice;
         }
 
-        // Parse the quantity
-        int quantity = 0;
         try {
             quantity = Integer.parseInt(textField.getText());
         } catch (NumberFormatException ex) {
