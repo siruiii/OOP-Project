@@ -107,7 +107,8 @@ public class SearchGUI extends JFrame {
         // Filter
         // Click to show search result with/without filter
         btnEnter.addActionListener(e -> {
-            clickEnter(items);
+            String input = (String) cbxField.getSelectedItem();
+            clickEnter(items, input);
         });
 
         textPane.addMouseMotionListener(new MouseMotionAdapter() {
@@ -291,8 +292,7 @@ public class SearchGUI extends JFrame {
         mgui.setVisible(true);
     }
 
-    private void clickEnter(List<Item> items) {
-        String input = (String) cbxField.getSelectedItem();
+    private void clickEnter(List<Item> items, String input) {
         List<Item> result = new ArrayList<Item>();
 
         if (input != null && !input.trim().isEmpty()) {
