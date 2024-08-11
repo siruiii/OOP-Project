@@ -218,9 +218,9 @@ public class ShoppingCartGUI extends JFrame {
 
     private void clickCheckout(){
         System.out.println("Checkout button clicked");
-            PaymentGUI paymentGUI = new PaymentGUI();
-            setVisible(false);
-            paymentGUI.showPay();
+        PaymentGUI paymentGUI = new PaymentGUI();
+        setVisible(false);
+        paymentGUI.showPay();
     }
 
     private void showEdit(int i){

@@ -11,10 +11,10 @@ import java.awt.event.ActionEvent;
 public class startGUI extends JFrame {
   private static boolean isTakeOut = false;
   private JPanel contentPane;
+  private JLabel orderLabel;
+  private JButton btnins;
+  private JButton btntake;
 
-  /**
-   * Create the frame.
-   */
   public startGUI() {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 450, 300);
@@ -24,30 +24,30 @@ public class startGUI extends JFrame {
     setContentPane(contentPane);
     contentPane.setLayout(null);
 
-    JLabel lblNewLabel = new JLabel("Restaurant Orders");
-    lblNewLabel.setBounds(138, 17, 174, 60);
-    lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-    contentPane.add(lblNewLabel);
+    orderLabel = new JLabel("Restaurant Orders");
+    orderLabel.setBounds(138, 17, 174, 60);
+    orderLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+    contentPane.add(orderLabel);
 
-    JButton btnNewButton = new JButton("In Store");
-    btnNewButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-    btnNewButton.addActionListener(new ActionListener() {
+    btnins = new JButton("In Store");
+    btnins.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+    btnins.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         entermenu();
       }
     });
-    btnNewButton.setBounds(91, 141, 101, 37);
-    contentPane.add(btnNewButton);
+    btnins.setBounds(91, 141, 101, 37);
+    contentPane.add(btnins);
 
-    JButton btnNewButton_1 = new JButton("Takeouts");
-    btnNewButton_1.setBounds(268, 141, 101, 37);
-    btnNewButton_1.addActionListener(new ActionListener() {
+    btntake = new JButton("Takeouts");
+    btntake.setBounds(268, 141, 101, 37);
+    btntake.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         isTakeOut = true;
         entermenu();
       }
     });
-    contentPane.add(btnNewButton_1);
+    contentPane.add(btntake);
   }
 
   public static boolean feeCheck(){

@@ -251,6 +251,7 @@ public class PaymentGUI extends JFrame {
                 JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
             } else {
                  // Print Receipt if the checkbox is selected
+                if (receiptCheckbox.isSelected()) {
                     String couponCode = couponField.getText().trim();
                     double discountMulti = pay.applyDiscount(couponCode);
                     pay.printReceipt(
@@ -258,10 +259,9 @@ public class PaymentGUI extends JFrame {
                         (String) payComboBox.getSelectedItem(), // Selected payment method
                         totalPrice, // Total price of the order
                         fee, // Takeout fee amount
-                        couponCode.isEmpty() ? null : couponCode, // The Entered CouponCode
-                        discountMulti // Discount multiplier
+                        couponCode.isEmpty() ? null : couponCode,
+                        discountMulti
                     );
-                }
                 }
                 pay.saveDiscounts("Discount.txt");
                 WaitingGUI gui = new WaitingGUI(CartManager.getTotalCount());
@@ -275,7 +275,7 @@ public class PaymentGUI extends JFrame {
 
         return buttonPanel; // Return the assembled button panel
     }
-
+    
      // Utility Method to Create JLabel with specified text, font, and alignment.
     private JLabel createLabel(String text, Font font, float alignment) {
         JLabel label = new JLabel(text);
