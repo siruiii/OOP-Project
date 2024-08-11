@@ -16,24 +16,11 @@ public class menuGUI extends JFrame {
     private JButton btnSearch;
     private JButton btnCart;
     private JScrollPane scrollPane;
-
     private JLabel lblinstruction;
     private int hoverLine = -1;
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    menuGUI frame = new menuGUI();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
     public menuGUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +58,7 @@ public class menuGUI extends JFrame {
 
         addItemFrame = new addItemGUI(this);
 
-        FileManager fileManager = new FileManager("itemfile.txt");
+        FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP team project/src/itemfile.txt");
         items = fileManager.getItems();
         showItems();
 

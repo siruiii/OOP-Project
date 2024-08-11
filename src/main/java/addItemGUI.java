@@ -26,25 +26,8 @@ public class addItemGUI extends JFrame {
     private JButton btnAdd;
     private JLabel lblQuantity;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    addItemGUI frame = new addItemGUI(null);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
 
-    /**
-     * Create the frame.
-     */
+
     public addItemGUI(menuGUI menuFrame) {
         this.menuFrame = menuFrame;
 
@@ -138,9 +121,8 @@ public class addItemGUI extends JFrame {
     }
     private void addItemToCart() {
         String selectedSize = null;
-        double price = 0.0; // Price based on the selected size
+        double price = 0.0; 
 
-        // Determine the selected size and its price
         if (chckbxSmall.isSelected()) {
             selectedSize = "Small";
             price = smallPrice;
@@ -152,7 +134,7 @@ public class addItemGUI extends JFrame {
             price = largePrice;
         }
 
-        // Parse the quantity
+
         int quantity = 0;
         try {
             quantity = Integer.parseInt(textField.getText());
@@ -162,14 +144,11 @@ public class addItemGUI extends JFrame {
             return;
         }
 
-        // Validate selection and quantity
         if (selectedSize != null && quantity > 0) {
 
             Item newItem = new Item(itemName, category, selectedSize, price, smallPrice, mediumPrice,
                     largePrice, quantity);
             CartManager.addItem(newItem);
-            // System.out.println(newItem.getSize()+" is added to cart");
-            // System.out.println(CartManager.getTotalCount());
             JOptionPane.showMessageDialog(null,
                     "Added to cart: " + itemName + " - " + selectedSize + " x" + quantity, "Success",
                     JOptionPane.INFORMATION_MESSAGE);
