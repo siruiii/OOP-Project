@@ -23,7 +23,7 @@ public class SearchGUI extends JFrame {
     private int hoverLine = -1;
     private int clickedLine = -1;
     private Style normalStyle, hoverStyle, clickedStyle;
-    private static List<String> searchHistory = new ArrayList<>();
+    private static List<String> searchHistory = new ArrayList<String>();
 
     public SearchGUI() {
         setTitle("Search Menu");
@@ -186,7 +186,7 @@ public class SearchGUI extends JFrame {
     private void updateSearchHistory() {
         cbxField.removeAllItems();
         // Reverse the order of search history
-        List<String> reversedHistory = new ArrayList<>(searchHistory);
+        List<String> reversedHistory = new ArrayList<String>(searchHistory);
         Collections.reverse(reversedHistory);
 
         // Add items in reversed order
@@ -196,13 +196,13 @@ public class SearchGUI extends JFrame {
     }
 
     private List<Item> filter(List<Item> items, String selectedCategory, String selectedRating) {
-        List<Item> filteredCategory = new ArrayList<>();
-        List<Item> filteredRating = new ArrayList<>();
+        List<Item> filteredCategory = new ArrayList<Item>();
+        List<Item> filteredRating = new ArrayList<Item>();
         double sRating = Double.parseDouble(selectedRating);
 
         // Filter by category
         if ("0".equals(selectedCategory)) {
-            filteredCategory = new ArrayList<>(items); // Copy all items if no specific category is selected
+            filteredCategory = new ArrayList<Item>(items); // Copy all items if no specific category is selected
         } else {
             for (Item item : items) {
                 if (selectedCategory.equals(item.getCategory())) {
@@ -213,7 +213,7 @@ public class SearchGUI extends JFrame {
 
         // Filter by rating
         if ("0".equals(selectedRating)) {
-            filteredRating = new ArrayList<>(items); // Copy all items if no specific rating is selected
+            filteredRating = new ArrayList<Item>(items); // Copy all items if no specific rating is selected
         } else {
             for (Item item : items) {
                 String r = item.getRatingStatus();
@@ -233,7 +233,7 @@ public class SearchGUI extends JFrame {
     }
 
     private List<Item> searchByName(List<Item> menu, String keyword) {
-        List<Item> search_results = new ArrayList<>();
+        List<Item> search_results = new ArrayList<Item>();
         for (Item item : menu) {
             // Check if the item's name contains the search term
             if (item.getName() != null && item.getName().toLowerCase().contains(keyword.toLowerCase())) {
@@ -285,15 +285,15 @@ public class SearchGUI extends JFrame {
         }
     }
 
-    private void goBack(){
+    private void goBack() {
         menuGUI mgui = new menuGUI();
         setVisible(false);
         mgui.setVisible(true);
     }
 
-    private void clickEnter(List<Item> items){
+    private void clickEnter(List<Item> items) {
         String input = (String) cbxField.getSelectedItem();
-        List<Item> result = new ArrayList<>();
+        List<Item> result = new ArrayList<Item>();
 
         if (input != null && !input.trim().isEmpty()) {
             // Store the search history
@@ -332,7 +332,7 @@ public class SearchGUI extends JFrame {
             }
         } else {
             // If input is empty, display all items
-            result = new ArrayList<>(items);
+            result = items;
 
             if (chckbxFilter.isSelected()) {
                 // Apply filters even if no search term is provided
