@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -12,6 +13,7 @@ public class PaymentGUI extends JFrame {
     private JCheckBox receiptCheckbox;
 
     private double totalPrice = CartManager.getTotalPrice();
+    private List<Item> cart = CartManager.getSortedCart();
     private final double fee = 1.99;
 
     public PaymentGUI() {
@@ -69,7 +71,7 @@ public class PaymentGUI extends JFrame {
 
     // Title panel
     private JPanel createTitlePanel() {
-        JLabel TitleLabel = new JLabel("Order Summary"); // "Order Summary" label
+        JLabel TitleLabel = new JLabel(" Order Summary"); // "Order Summary" label
         TitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         TitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -102,7 +104,7 @@ public class PaymentGUI extends JFrame {
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
 
-        for (Item item : CartManager.getSortedCart()) {
+        for (Item item : cart) {
             JPanel itemPanel = new JPanel();
             itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.X_AXIS));
             itemPanel.setBorder(new LineBorder(Color.LIGHT_GRAY));
@@ -249,6 +251,10 @@ public class PaymentGUI extends JFrame {
             if (payComboBox.getSelectedIndex() == 0) {
                 // Show warning if no payment method is selected
                 JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
+            } else if (cart.isEmpty()){
+                // Show warning message
+                JOptionPane.showMessageDialog(this, "Your cart is empty. Please add items to your cart before proceeding to payment.", "Empty Cart", JOptionPane.WARNING_MESSAGE);
+                return; // Prevent payment from proceeding
             } else {
                  // Print Receipt if the checkbox is selected
                 if (receiptCheckbox.isSelected()) {
@@ -275,7 +281,7 @@ public class PaymentGUI extends JFrame {
 
         return buttonPanel; // Return the assembled button panel
     }
-    
+
      // Utility Method to Create JLabel with specified text, font, and alignment.
     private JLabel createLabel(String text, Font font, float alignment) {
         JLabel label = new JLabel(text);
@@ -337,7 +343,7 @@ public class PaymentGUI extends JFrame {
         setVisible(true);
     }
 
-     /*Debugger
+    /* Debugger
     public static void main(String[] args) {
         PaymentGUI gui = new PaymentGUI();
         gui.showPay(); // Show the payment window
