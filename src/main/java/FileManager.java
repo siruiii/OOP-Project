@@ -7,7 +7,7 @@ public class FileManager {
 
     private List<Item> items;
     private List<Discount> discounts;
-    private Discount hasDiscount;
+    private Discount hasCode;
 
     // Constructor
     public FileManager(String fileName) {
@@ -93,7 +93,7 @@ public class FileManager {
     public double applyDiscount(String code) {
         for (Discount discount : discounts) {
             if (discount.getCode().equalsIgnoreCase(code) && discount.getUsageCount() > 0) {
-                hasDiscount = discount;
+                hasCode = discount;
                 return discount.getDiscount();
             }
             else if(discount.getCode().equalsIgnoreCase(code) && discount.getUsageCount() == 0){
@@ -105,8 +105,8 @@ public class FileManager {
 
     // Write the updated discount codes availibility back to the file
    public void saveDiscounts(String fileName) {
-        if (hasDiscount != null) {
-            hasDiscount.decrementUsage(); // Decrement the usage count
+        if (hasCode != null) {
+            hasCode.decrementUsage(); // Decrement the usage count
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Discount discount : discounts) {

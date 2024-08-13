@@ -57,8 +57,8 @@ public class menuGUI extends JFrame {
 
         addItemFrame = new addItemGUI(this);
 
-        FileManager fileManager = new FileManager("itemfile.txt");
-        items = fileManager.getItems();
+        FileManager menu = new FileManager("itemfile.txt");
+        items = menu.getItems();
         showItems();
 
         textPane.addMouseListener(new MouseAdapter() {

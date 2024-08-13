@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +8,7 @@ import javax.swing.*;
 
 public class RatingGUI extends JFrame {
     private final List<Item> cartItems;
-    private final FileManager file;
+    private final FileManager save;
     private final JPanel panel;
     private final JButton finishButton;
     private JTextArea feedbackTextArea;
@@ -17,8 +16,8 @@ public class RatingGUI extends JFrame {
 
     // Constructor
     public RatingGUI() {
-        file = new FileManager("itemfile.txt", false); // Load items from file
-        cartItems = CartManager.readCartItem(); // Get items from the cart
+        save = new FileManager("itemfile.txt"); // Load items from file
+        cartItems = CartManager.getSortedCart(); // Get sorted items from the cart
         ratingComboBoxes = new ArrayList<>();
 
         setTitle("Rating & Feedback");
@@ -54,7 +53,7 @@ public class RatingGUI extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         panel.add(instructLabel, gbc);
 
-        // Adding each item and its rating spinner to the panel
+        // Adding each non-repeated item and its rating spinner to the panel
         gbc.gridwidth = 1;
         Set<String> addedItems = new HashSet<>(); // Set to track added item names
         for (Item item : cartItems) {
@@ -107,7 +106,7 @@ public class RatingGUI extends JFrame {
         gbc.weighty = 0;  // Do not grow vertically
         finishButton = new JButton("Finish");
         finishButton.setPreferredSize(new Dimension(100, 30));
-        finishButton.addActionListener(new FinishButtonListener());
+        finishButton.addActionListener(this::clickFinish);
         panel.add(finishButton, gbc);
 
         // Wrap the panel in a JScrollPane
@@ -119,31 +118,32 @@ public class RatingGUI extends JFrame {
         add(scrollPane);
     }
 
-    // Listener for the Finish button
-    private class FinishButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // Update ratings in FileManager
-            for (int i = 0; i < cartItems.size(); i++) {
-                Item cartItem = cartItems.get(i);
-                String rating = (String) ratingComboBoxes.get(i).getSelectedItem();
+    // Method to handle the Finish button click
+    private void clickFinish(ActionEvent e) {
+        // Update ratings in FileManager
+        for (int i = 0; i < cartItems.size(); i++) {
+            Item cartItem = cartItems.get(i);
+            String rating = (String) ratingComboBoxes.get(i).getSelectedItem();
 
-                if (rating != null && !rating.isEmpty()) {
-                    double ratingValue = Double.parseDouble(rating);
-                    file.updateItemRating(cartItem.getName(), ratingValue);
-                }
+            if (rating != null && !rating.isEmpty()) {
+                double ratingValue = Double.parseDouble(rating);
+                save.updateItemRating(cartItem.getName(), ratingValue);
             }
-            // Save updated items back to menuitem.txt
-            file.saveItems("itemfile.txt");
-
-            // Write feedback using FileManager
-            file.writeFeedback(feedbackTextArea.getText().trim());
-
-            // Show thank you message in a pop-up box
-            JOptionPane.showMessageDialog(panel, "Thank you so much! Bye for Now!", "Message", JOptionPane.INFORMATION_MESSAGE);
-
-            dispose();
         }
+        
+        // Write available feedback using FileManager
+        String feedbackText = feedbackTextArea.getText().trim();
+        if (!feedbackText.isEmpty()) {
+            save.writeFeedback(feedbackText);
+        }
+        
+        // Save updated items back to menuitem.txt
+        save.saveItems("itemfile.txt");
+
+        // Show thank you message in a pop-up box
+        JOptionPane.showMessageDialog(panel, "Thank you so much! Bye for Now!", "Gratitude Message", JOptionPane.INFORMATION_MESSAGE);
+
+        dispose();
     }
 
     public void showRate() {

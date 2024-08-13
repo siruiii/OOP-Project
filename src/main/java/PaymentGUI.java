@@ -272,7 +272,7 @@ public class PaymentGUI extends JFrame {
             JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
         } else if (cart.isEmpty()){
             // Show warning message
-            JOptionPane.showMessageDialog(this, "Your cart is empty. Please add items to your cart before proceeding to payment.", "Empty Cart", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Your cart is empty. Please add items to your cart before proceeding the payment.", "Empty Cart", JOptionPane.WARNING_MESSAGE);
             return; // Prevent payment from proceeding
         } else {
              // Print Receipt if the checkbox is selected
