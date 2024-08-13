@@ -15,13 +15,9 @@ public class FileManager {
         readFile(fileName);
     }
     
-    public FileManager(String fileName, boolean useDiscount) {
-        items = new ArrayList<>();
-        readFile(fileName);
-        if (useDiscount){
-            discounts = new ArrayList<>();
-            readDiscounts("Discount.txt");
-        }
+    public FileManager(String fileName, boolean isDiscount) {
+        discounts = new ArrayList<>();
+        readDiscounts(fileName);
     }
 
     // Read Menu info
@@ -100,8 +96,11 @@ public class FileManager {
                 hasDiscount = discount;
                 return discount.getDiscount();
             }
+            else if(discount.getCode().equalsIgnoreCase(code) && discount.getUsageCount() == 0){
+                return 0;
+            }
         }
-        return 0;
+        return -1;
     }
 
     // Write the updated discount codes availibility back to the file

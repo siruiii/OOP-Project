@@ -17,8 +17,8 @@ public class PaymentGUI extends JFrame {
     private final double fee = 1.99;
 
     public PaymentGUI() {
-        // Initialize PayManager
-        pay = new FileManager("itemfile.txt", true);
+        // Initialize PayManager for Codes
+        pay = new FileManager("Discount.txt", true);
 
         // Set up UI components
         setTitle("Payment");

@@ -26,8 +26,7 @@ public class addItemGUI extends JFrame {
     private JButton btnAdd;
     private JLabel lblQuantity;
 
-
-
+    
     public addItemGUI(menuGUI menuFrame) {
         this.menuFrame = menuFrame;
 

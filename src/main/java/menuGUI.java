@@ -57,7 +57,7 @@ public class menuGUI extends JFrame {
 
         addItemFrame = new addItemGUI(this);
 
-        FileManager fileManager = new FileManager("/Users/annabella/Desktop/Eclipse/OOP team project/src/itemfile.txt");
+        FileManager fileManager = new FileManager("itemfile.txt");
         items = fileManager.getItems();
         showItems();
 
