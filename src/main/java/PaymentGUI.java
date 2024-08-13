@@ -203,25 +203,33 @@ public class PaymentGUI extends JFrame {
 
         JButton applyCouponButton = new JButton("Apply"); 
         applyCouponButton.addActionListener(e -> {
-            String code = couponField.getText().trim();
-            if (!code.isEmpty()) {
-                double discount = pay.applyDiscount(code);
-                if (discount > 0) {
-                    double percentageOff = (1 - discount) * 100; // Calculate percentage off
-                    totalPrice *= discount;
-                    totalPLb.setText("$" + String.format("%.2f", totalPrice)); 
-                    JOptionPane.showMessageDialog(PaymentGUI.this, "Coupon applied Successfully!", "Coupon Applied", JOptionPane.INFORMATION_MESSAGE);
-                    showDiscountPanel(percentageOff); // Show the discount panel
-                } else if (discount == 0) {
-                    JOptionPane.showMessageDialog(PaymentGUI.this, "Expired coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
-                } else{
-                    JOptionPane.showMessageDialog(PaymentGUI.this, "Invalid coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } 
+            clickApply();
         });
+        
         couponPanel.add(applyCouponButton); 
 
         return couponPanel;
+    }
+    
+    // Check Coupon code 
+    private void clickApply(){
+        String code = couponField.getText().trim();
+        if (!code.isEmpty()) {
+            double discount = pay.applyDiscount(code);
+            if (discount > 0) {
+                double percentageOff = (1 - discount) * 100; // Calculate percentage off
+                totalPrice *= discount;
+                totalPLb.setText("$" + String.format("%.2f", totalPrice)); 
+                JOptionPane.showMessageDialog(PaymentGUI.this, "Coupon applied Successfully!", "Coupon Applied", JOptionPane.INFORMATION_MESSAGE);
+                showDiscountPanel(percentageOff); // Show the discount panel
+            } else if (discount == 0) {
+                JOptionPane.showMessageDialog(PaymentGUI.this, "Expired coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
+            } else{
+                JOptionPane.showMessageDialog(PaymentGUI.this, "Invalid coupon code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(PaymentGUI.this, "You haven't enter any code.", "Coupon Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Receipt checkbox Panel
@@ -248,38 +256,43 @@ public class PaymentGUI extends JFrame {
         JButton btnConfirm = new JButton("Confirm");
         // "Confirm" button to go to the Waiting Page
         btnConfirm.addActionListener(e -> {
-            if (payComboBox.getSelectedIndex() == 0) {
-                // Show warning if no payment method is selected
-                JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
-            } else if (cart.isEmpty()){
-                // Show warning message
-                JOptionPane.showMessageDialog(this, "Your cart is empty. Please add items to your cart before proceeding to payment.", "Empty Cart", JOptionPane.WARNING_MESSAGE);
-                return; // Prevent payment from proceeding
-            } else {
-                 // Print Receipt if the checkbox is selected
-                if (receiptCheckbox.isSelected()) {
-                    String couponCode = couponField.getText().trim();
-                    double discountMulti = pay.applyDiscount(couponCode);
-                    pay.printReceipt(
-                        CartManager.readCartItem(), // List of items in the cart
-                        (String) payComboBox.getSelectedItem(), // Selected payment method
-                        totalPrice, // Total price of the order
-                        fee, // Takeout fee amount
-                        couponCode.isEmpty() ? null : couponCode,
-                        discountMulti
-                    );
-                }
-                pay.saveDiscounts("Discount.txt");
-                WaitingGUI gui = new WaitingGUI(CartManager.getTotalCount());
-                gui.showWait();
-                dispose();
-            }
+            clickConfirm();
         });
 
         buttonPanel.add(btnReturn, BorderLayout.WEST);
         buttonPanel.add(btnConfirm, BorderLayout.EAST);
 
         return buttonPanel; // Return the assembled button panel
+    }
+
+    // Check whether the payment method is selected & if the receipt needs to be printed
+    private void clickConfirm(){
+        if (payComboBox.getSelectedIndex() == 0) {
+            // Show warning if no payment method is selected
+            JOptionPane.showMessageDialog(PaymentGUI.this, "Please select a payment method.", "Payment Method Required", JOptionPane.WARNING_MESSAGE);
+        } else if (cart.isEmpty()){
+            // Show warning message
+            JOptionPane.showMessageDialog(this, "Your cart is empty. Please add items to your cart before proceeding to payment.", "Empty Cart", JOptionPane.WARNING_MESSAGE);
+            return; // Prevent payment from proceeding
+        } else {
+             // Print Receipt if the checkbox is selected
+            if (receiptCheckbox.isSelected()) {
+                String couponCode = couponField.getText().trim();
+                double discountMulti = pay.applyDiscount(couponCode);
+                pay.printReceipt(
+                    CartManager.readCartItem(), // List of items in the cart
+                    (String) payComboBox.getSelectedItem(), // Selected payment method
+                    totalPrice, // Total price of the order
+                    fee, // Takeout fee amount
+                    couponCode.isEmpty() ? null : couponCode,
+                    discountMulti
+                );
+            }
+            pay.saveDiscounts("Discount.txt");
+            WaitingGUI gui = new WaitingGUI(CartManager.getTotalCount());
+            gui.showWait();
+            dispose();
+        }
     }
 
      // Utility Method to Create JLabel with specified text, font, and alignment.
