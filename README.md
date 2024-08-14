@@ -6,8 +6,11 @@ CS470 Object-Oriented Programming Project
 - Sirui Wang sw5546@nyu.edu
 - Annabella Lee pl2220@nyu.edu
 
-## UML Diagrams
-Please see [the wiki](https://github.com/siruiii/OOP-Project/wiki)
+## Install and Run
+```
+cd src/main/java
+java Main.java
+```
 
 ## Project Description
 In-store food ordering system accepted orders from customers in the store location. Customers are able to pick in store dinning or takeouts based on their needs. Takeouts will add additional fee to the total bill amount at checkout.\
