@@ -28,7 +28,7 @@ public class WaitingGUI extends JFrame {
 
         // Load and resize the GIF using ImageIcon
         try {
-            ImageIcon originalIcon = new ImageIcon("/Users/icyfloaty/Documents/CS_coding/OOP/Final_Project/loading.gif");
+            ImageIcon originalIcon = new ImageIcon("loading.gif");
             Image originalImage = originalIcon.getImage();
             Image scaledImage = originalImage.getScaledInstance(96, 96, Image.SCALE_DEFAULT);
             load = new JLabel(new ImageIcon(scaledImage), SwingConstants.CENTER);
